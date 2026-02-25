@@ -31,11 +31,19 @@ class QuotReqController extends Controller
      */
 public function index()
 {
-    $cases = Service::where('status', 'quotation request')
+    // Ambil semua branch untuk dropdown
+    $branches = \App\Models\Branches::all();
+    $cases = Service::where('status', ['quotation request'])
                     ->orderBy('created_at', 'DESC')
                     ->get();
 
-    return view('master.QuotReq', compact('cases'));
+    return view('master.QuotReq', [
+        'cases' => $cases,
+        'branches' => $branches,
+        'selected_branch' => 'all',
+        'start_date' => null,   
+        'end_date' => null
+    ]);
 }
 
    private function getEnumValues(string $table, string $column): array
@@ -59,48 +67,46 @@ public function index()
     
 public function logdate(Request $request)
 {
-    // Ambil user login berdasarkan session
-    $username = Session::get('username');
-    $user = \App\Models\User::where('un', $username)->first();
+    // ✅ TAMBAH: Filter status 'new' dan 'repair progress' dari awal
+    $query = Service::where('status', ['quotation request']);
 
-    if (!$user) {
-        return redirect()->route('login')->with('error', 'User tidak ditemukan.');
-    }
+    // Ambil semua cabang untuk dropdown
+    $branches = \App\Models\Branches::all(); 
 
-    // Mulai query hanya untuk cabang CE login
-    $query = Service::where('branch_id', $user->branch_id);
-
-    // Ambil input tanggal
+    // Ambil input filter
+    $branchId = $request->input('branch_id');
     $startDate = $request->input('start_date');
     $endDate = $request->input('end_date');
 
-    // Jika hanya end_date diisi → start_date otomatis 1 hari sebelum
+    // Filter cabang bila dipilih (tidak null)
+    if ($branchId && $branchId !== 'all') {
+        $query->where('branch_id', $branchId);
+    }
+
+    // Auto adjust tanggal
     if ($endDate && !$startDate) {
         $startDate = \Carbon\Carbon::parse($endDate)->subDay()->toDateString();
     }
 
-    // Jika hanya start_date diisi → end_date otomatis hari ini
     if ($startDate && !$endDate) {
         $endDate = \Carbon\Carbon::now()->toDateString();
     }
 
-    // Filter berdasarkan tanggal
+    // Filter tanggal
     if ($startDate && $endDate) {
         $query->whereBetween('received_date', [$startDate, $endDate]);
     }
 
-    // Ambil hasil (hanya milik branch CE login)
-    $services = $query->orderByDesc('received_date')->paginate(10);
+    $cases = $query->orderByDesc('received_date')->get();
 
-    // Kirim ke view
-    return view('cm.QuotReq', [
-        'services' => $services,
+    return view('master.QuotReq', [
+        'cases' => $cases,
+        'branches' => $branches,
+        'selected_branch' => $branchId,
         'start_date' => $startDate,
-        'end_date' => $endDate,
+        'end_date' => $endDate
     ]);
 }
-
-
 
     public function print($id)
 {

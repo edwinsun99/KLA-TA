@@ -113,11 +113,14 @@ Route::group([], function () {
 
     Route::get('/engineer', [MasterEngineerController::class, 'index']) ->name('engineer.index');
 
-    Route::get('/quotation-request', [MasterQuotReqController::class, 'index']) ->name('quotreq.index');
+    Route::get('/quotation-request', [MasterQuotReqController::class, 'index']) ->name('qreq.index');
 
-    Route::get('/quotreq/logdate', [MasterQuotReqController::class, 'logdate'])->name('quotreq.logdate');
+    Route::get('/quotreq/logdate', [MasterQuotReqController::class, 'logdate'])->name('qreq.logdate');
 
-    Route::get('/quotation-appcancl', [MasterQuotAppCancController::class, 'index'])->name('quotreqaoc.index');
+    Route::get('/quotation-appcancl', [MasterQuotAppCancController::class, 'index'])->name('qac.index');
+
+    Route::get('/qac-logdate', [MasterQuotAppCancController::class, 'logdate'])->name('qac.logdate');
+
 
     Route::get('/select-case-for-erf', [MasterErfController::class, 'selectCase'])
         ->name('erf.select');
@@ -200,7 +203,7 @@ Route::prefix('cm')->name('cm.')->group(function () {
     Route::get('/case/search', [CmCaseController::class, 'search'])->name('case.search');
 
     // LOGDATE
-    Route::get('/case/logdate', [CmCaseController::class, 'logdate'])->name('case.logdate');
+    Route::get('cm/case/logdate', [CmCaseController::class, 'logdate'])->name('case.logdate');
     Route::get('/quotreq/logdate', [CmQuotReqController::class, 'logdate'])->name('quotreq.logdate');
 
     // EXCEL

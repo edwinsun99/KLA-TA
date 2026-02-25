@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Integrated Service Delivery 2025')</title>
+    <title>@yield('title', 'KLA Computer')</title>
 
+    <link rel="icon" type="image/png" href="{{ asset('logo.png') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -249,8 +250,8 @@
                 </a>
                 <div id="menuQuotation" class="collapse {{ $quotActive ? 'show' : '' }}" data-bs-parent="#sidebarAccordion">
                     <div class="submenu-container">
-                        <a href="{{ route('master.quotreq.index') }}" class="submenu-item {{ request()->routeIs('master.quotreq.index') ? 'active-sub' : '' }}">Quotation Request</a>
-                        <a href="{{ route('master.quotreqaoc.index') }}" class="submenu-item {{ request()->routeIs('master.quotreqaoc.index') ? 'active-sub' : '' }}">Quot Approved / Cancel</a>
+                        <a href="{{ route('master.qreq.index') }}" class="submenu-item {{ request()->routeIs('master.quotreq.index') ? 'active-sub' : '' }}">Quotation Request</a>
+                        <a href="{{ route('master.qac.index') }}" class="submenu-item {{ request()->routeIs('master.quotreqaoc.index') ? 'active-sub' : '' }}">Quot Approved / Cancel</a>
                     </div>
                 </div>
             </div>

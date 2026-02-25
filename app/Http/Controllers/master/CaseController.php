@@ -13,14 +13,12 @@ use Maatwebsite\Excel\Facades\Excel;
 class CaseController extends Controller
 {
     
- public function index()
+public function index()
 {
-    // Ambil semua branch untuk dropdown
     $branches = \App\Models\Branches::all();
 
-    // Ganti ->get() menjadi ->paginate(10)
-    // Ini otomatis akan membatasi 10 data dan menangani logika halaman
-    $cases = Service::orderByDesc('received_date')->paginate(2);
+    // UBAH INI: Ganti paginate(2) jadi get() biar sama kayak CM
+    $cases = Service::orderByDesc('received_date')->get(); 
 
     return view('master.case', [
         'cases' => $cases,

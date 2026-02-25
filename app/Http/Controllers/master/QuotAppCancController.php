@@ -30,11 +30,10 @@ class QuotAppCancController extends Controller
     /**
      * Tampilkan semua case untuk CE sesuai cabangnya.
      */
- public function index()
+  public function index()
 {
     // Ambil semua branch untuk dropdown
     $branches = \App\Models\Branches::all();
-
     $cases = Service::whereIn('status', ['quotation approved', 'quotation cancelled'])
                     ->orderBy('created_at', 'DESC')
                     ->get();
@@ -69,48 +68,46 @@ class QuotAppCancController extends Controller
     
 public function logdate(Request $request)
 {
-    // Ambil user login berdasarkan session
-    $username = Session::get('username');
-    $user = \App\Models\User::where('un', $username)->first();
+    // ✅ TAMBAH: Filter status 'new' dan 'repair progress' dari awal
+    $query = Service::whereIn('status', ['quotation approved', 'quotation cancelled']);
 
-    if (!$user) {
-        return redirect()->route('login')->with('error', 'User tidak ditemukan.');
-    }
+    // Ambil semua cabang untuk dropdown
+    $branches = \App\Models\Branches::all(); 
 
-    // Mulai query hanya untuk cabang CE login
-    $query = Service::where('branch_id', $user->branch_id);
-
-    // Ambil input tanggal
+    // Ambil input filter
+    $branchId = $request->input('branch_id');
     $startDate = $request->input('start_date');
     $endDate = $request->input('end_date');
 
-    // Jika hanya end_date diisi → start_date otomatis 1 hari sebelum
+    // Filter cabang bila dipilih (tidak null)
+    if ($branchId && $branchId !== 'all') {
+        $query->where('branch_id', $branchId);
+    }
+
+    // Auto adjust tanggal
     if ($endDate && !$startDate) {
         $startDate = \Carbon\Carbon::parse($endDate)->subDay()->toDateString();
     }
 
-    // Jika hanya start_date diisi → end_date otomatis hari ini
     if ($startDate && !$endDate) {
         $endDate = \Carbon\Carbon::now()->toDateString();
     }
 
-    // Filter berdasarkan tanggal
+    // Filter tanggal
     if ($startDate && $endDate) {
         $query->whereBetween('received_date', [$startDate, $endDate]);
     }
 
-    // Ambil hasil (hanya milik branch CE login)
-    $services = $query->orderByDesc('received_date')->paginate(10);
+    $cases = $query->orderByDesc('received_date')->get();
 
-    // Kirim ke view
-    return view('ce.QuotAorC', [
-        'services' => $services,
+    return view('master.QuotAorC', [
+        'cases' => $cases,
+        'branches' => $branches,
+        'selected_branch' => $branchId,
         'start_date' => $startDate,
-        'end_date' => $endDate,
+        'end_date' => $endDate
     ]);
 }
-
-
 
     public function print($id)
 {

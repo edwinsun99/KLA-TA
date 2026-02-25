@@ -105,6 +105,39 @@
         </div>
     </div>
 
+    {{-- FILTER SECTION --}}
+    <div class="glass-card">
+        <form action="{{ route('master.qac.logdate') }}" method="GET" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">CABANG</label>
+                <select name="branch_id" class="form-select filter-input">
+                    <option value="all">Semua Cabang</option>
+                    @foreach ($branches as $branch)
+                        <option value="{{ $branch->id }}" {{ (isset($selected_branch) && $selected_branch == $branch->id) ? 'selected' : '' }}>
+                            {{ $branch->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">START DATE</label>
+                <input type="date" name="start_date" class="form-control filter-input" value="{{ $start_date }}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small fw-bold text-muted">END DATE</label>
+                <input type="date" name="end_date" class="form-control filter-input" value="{{ $end_date }}">
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn-custom w-100 justify-content-center shadow-sm" style="background: var(--primary-purple);">
+                    Apply Filter
+                </button>
+                @if($start_date || $end_date || $selected_branch)
+                    <a href="{{ route('master.qac.logdate') }}" class="btn btn-light border d-flex align-items-center justify-content-center" style="border-radius: 12px; width: 80px;">Reset</a>
+                @endif
+            </div>
+        </form>
+    </div>
+
        {{-- TABLE SECTION --}}
     <div class="mb-3 px-2">
         <small class="text-muted">Total: <strong>{{ count($cases ?? []) }}</strong> data ditemukan.</small>
@@ -134,7 +167,7 @@
                 @endif
 
                 @forelse(collect($cases ?? [])->sortByDesc('received_date') as $service)
-                    <tr class="clickable-row" data-href="{{ route('case.show', $service->id) }}">
+                    <tr class="clickable-row" data-href="{{ route('master.case.show', $service->id) }}">
                         <td class="fw-bold text-purple">{{ $service->cof_id }}</td>
                         
                         <td>
@@ -166,13 +199,15 @@
                             </span>
                         </td>
 
-                        <td>
-                            @if($service->erf_file)
-                                <span class="text-primary small"><i class="bi bi-file-earmark-check"></i> Ready</span>
-                            @else
-                                <span class="text-danger small"><i class="bi bi-x-circle"></i> No File</span>
-                            @endif
-                        </td>
+                         <td>
+                        @if ($service->erf_file)
+                            <a href="{{ route('erf.download', $service->id) }}" class="btn btn-sm btn-outline-primary px-3" style="border-radius: 8px;">
+                                <i class="bi bi-download"></i> ERF
+                            </a>
+                        @else
+                            <span class="text-danger small fw-bold"><i class="bi bi-exclamation-circle"></i> ERF belum diupload!</span>
+                        @endif
+                    </td>
 
                         <td class="text-muted">
                             {{ \Carbon\Carbon::parse($service->received_date)->format('d M Y') }}

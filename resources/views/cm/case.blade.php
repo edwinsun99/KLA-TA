@@ -107,7 +107,7 @@
 
     {{-- FILTER SECTION --}}
     <div class="glass-card">
-        <form action="{{ route('master.case.logdate') }}" method="GET" class="row g-3 align-items-end">
+        <form action="{{ route('cm.case.logdate') }}" method="GET" class="row g-3 align-items-end">
             <div class="col-md-3">
                 <label class="form-label small fw-bold text-muted">CABANG</label>
                 <select name="branch_id" class="form-select filter-input">
@@ -199,13 +199,15 @@
                             </span>
                         </td>
 
-                        <td>
-                            @if($service->erf_file)
-                                <span class="text-primary small"><i class="bi bi-file-earmark-check"></i> Ready</span>
-                            @else
-                                <span class="text-danger small"><i class="bi bi-x-circle"></i> No File</span>
-                            @endif
-                        </td>
+                          <td>
+                        @if ($service->erf_file)
+                            <a href="{{ route('erf.download', $service->id) }}" class="btn btn-sm btn-outline-primary px-3" style="border-radius: 8px;">
+                                <i class="bi bi-download"></i> ERF
+                            </a>
+                        @else
+                            <span class="text-danger small fw-bold"><i class="bi bi-exclamation-circle"></i> ERF belum diupload!</span>
+                        @endif
+                    </td>
 
                         <td class="text-muted">
                             {{ \Carbon\Carbon::parse($service->received_date)->format('d M Y') }}
