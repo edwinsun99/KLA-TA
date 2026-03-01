@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class CofDataMC implements FromCollection, WithHeadings, WithStyles
+class CofDataCM implements FromCollection, WithHeadings, WithStyles
 {
 // for master
     public function collection()
@@ -44,7 +44,7 @@ class CofDataMC implements FromCollection, WithHeadings, WithStyles
         $reportingDate = Carbon::now()->format('d F Y');
 
         return [
-            ['KLA View Case Report (GLOBAL)'], // Title
+            ['KLA View Case Report'], // Title
             ['Export Date: ' . $reportingDate], 
             [], // Space before table
             [

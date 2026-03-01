@@ -152,7 +152,7 @@ select option {
                         <label class="form-label info-label">Change Status to *</label>
                         <select name="status" class="form-select shadow-sm" required>
                             @php
-                                $opsi = ['repair progress', 'quotation request', 'cancel repair', 'finish repair'];
+                                $opsi = ['repair progress', 'quotation request', 'cancel repair', 'finish repair', 'close repair'];
                             @endphp
                             @foreach ($opsi as $st)
                                 <option value="{{ $st }}" {{ $service->status == $st ? 'selected' : '' }}>

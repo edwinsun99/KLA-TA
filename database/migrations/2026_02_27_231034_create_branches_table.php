@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-      Schema::create('users', function (Blueprint $table) {
+    Schema::create('branches', function (Blueprint $table) {
     $table->id();
-    $table->string('username')->unique();
-    $table->string('email')->unique();
-    $table->string('profile_photo');
-    $table->string('password');
-    $table->string('role', 50)->nullable();
-    $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete();
+    $table->string('name');
+    $table->char('prefix', 1);
+    $table->text('address')->nullable();
+    $table->string('phone')->nullable();
+    $table->decimal('latitude', 10, 7);
+    $table->decimal('longitude', 10, 7);
+    $table->time('open_at');
+    $table->time('close_at');
     $table->timestamps();
 });
     }
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('branches');
     }
 };

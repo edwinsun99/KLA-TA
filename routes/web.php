@@ -169,7 +169,7 @@ Route::group([], function () {
     Route::get('/case/{id}/pdf/preview', [MasterDetailController::class, 'previewPdf'])->name('case.previewPdf');
 
 // Pastikan ->name() nya sama dengan yang dipanggil di form
-    Route::get('/excel/cofdata', [MasterCaseController::class, 'excel'])->name('excel.cofdata');
+    Route::get('master/excel/cofdata', [MasterCaseController::class, 'excel'])->name('excel.cofdata');
 
       
       
@@ -200,17 +200,18 @@ Route::prefix('cm')->name('cm.')->group(function () {
     Route::get('/case/{id}', [CmDetailController::class, 'show'])->name('case.show');
 
     // SEARCH
-    Route::get('/case/search', [CmCaseController::class, 'search'])->name('case.search');
+    Route::get('cm/case/search', [CmCaseController::class, 'search'])->name('case.search');
 
     // LOGDATE
     Route::get('cm/case/logdate', [CmCaseController::class, 'logdate'])->name('case.logdate');
-    Route::get('/quotreq/logdate', [CmQuotReqController::class, 'logdate'])->name('quotreq.logdate');
+    Route::get('cm/quotreq/logdate', [CmQuotReqController::class, 'logdate'])->name('qreq.logdate');
 
     // EXCEL
-    Route::get('/excel/cofdata', [CmCaseController::class, 'excel'])->name('excel.cofdata');
+    Route::get('cm/excel/cofdata', [CmCaseController::class, 'excel'])->name('excel.cofdata');
+        Route::get('cm/excel/qreqreport', [CmQuotReqController::class, 'excel'])->name('excel.qreqreport');
 
     // CM: menu Quotation Request (tampilkan list yang status == 'Quotation Request')
-    Route::get('/quotation-request', [CmQuotReqController::class, 'index']) ->name('quotreq.index');
+    Route::get('cm/quotation-request', [CmQuotReqController::class, 'index']) ->name('qreq.index');
 
     Route::post('/case/{id}/status', 'App\Http\Controllers\cm\DetailController@updateStatus')
     ->name('case.updateStatus');
@@ -265,7 +266,7 @@ Route::group([], function () {
     Route::get('/case/{id}/pdf/preview', [CeDetailController::class, 'previewPdf'])->name('case.previewPdf');
 
     Route::get('/cases/search', [CeCaseController::class, 'search'])->name('case.search');
-    Route::get('/excel/cofdata', [CeCaseController::class, 'excel'])->name('excel.cofdata');
+    Route::get('ce/excel/cofdata', [CeCaseController::class, 'excel'])->name('ce.excel.cofdata');
 // CE - ERF ROUTES
 Route::prefix('ce')->group(function () {
 
@@ -310,6 +311,19 @@ Route::post('/ce/case/{id}/update-all', [App\Http\Controllers\ce\DetailControlle
 
     Route::post('/profile/password', [CeProfileController::class, 'updatePassword'])
         ->name('profile.password');
+        
+        // Generate Invoice
+    Route::post('/create/invoice/{id}', 
+        [App\Http\Controllers\CeFinishController::class, 'create']
+    )->name('invoice.create');
+
+Route::get('/ce/invoice/{id}/preview', [FinishController::class, 'previewInvoice'])
+    ->name('invoice.preview');
+
+    // Mark as Paid
+    Route::post('/paid/{id}', 
+        [App\Http\Controllers\CeFinishController::class, 'markAsPaid']
+    )->name('invoice.paid');
   
 });
 

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\cm;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Service;
-use App\Excel\CofDataMC;
+use App\Excel\CofDataCM;
 use Carbon\Carbon; // <-- ini baris penting
 use App\Models\Branches;
 use Maatwebsite\Excel\Facades\Excel;
@@ -98,8 +98,7 @@ public function search(Request $request)
             });
         })
         ->latest() // Saran: Tampilkan yang terbaru di atas
-        ->get() // WAJIB paginate di sini juga
-        ->withQueryString();
+        ->get();
 
     return view('cm.case', [
         'cases'           => $cases,
@@ -111,10 +110,14 @@ public function search(Request $request)
     ]);
 }
 
-
-
 public function excel()
 {
-    return Excel::download(new CofDataMC, 'Cof Data.xlsx');
+    Carbon::setLocale('id');
+
+    $tanggal = Carbon::now()->translatedFormat('j F Y');
+
+    $fileName = 'COF Report_' . $tanggal . '.xlsx';
+
+    return Excel::download(new CofDataCM, $fileName);
 }
 }

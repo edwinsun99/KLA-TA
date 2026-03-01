@@ -9,20 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
- public function up()
-{
+    public function up(): void
+    {
     Schema::create('lognote', function (Blueprint $table) {
-        $table->id();
-     // ubah jadi varchar(255)
-        $table->string('cof_id', 255); // bukan lagi unsignedBigInteger
-        $table->string('un', 255);     // bukan lagi unsignedBigInteger
-        $table->text('logdesc');
-        $table->timestamps();
-
-        // Relasi
-    });
-}
-
+    $table->id();
+    $table->string('cof_id');
+    $table->string('username')->nullable();
+    $table->text('logdesc');
+    $table->timestamps();
+});
+    }
 
     /**
      * Reverse the migrations.

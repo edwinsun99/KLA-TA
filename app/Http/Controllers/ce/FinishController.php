@@ -242,4 +242,69 @@ public function store(Request $request)
     {
         return Excel::download(new CofData, 'CofData.xlsx');
     }
+
+//   public function createInvoice($id)
+// {
+//     $service = Service::with('branch')->findOrFail($id);
+
+//     if (!$service->invoice_number) {
+
+//         $prefix = $service->branch->prefix;
+//         $branchCode = $this->getBranchCode($prefix);
+
+//         $invoiceNumber = 'INV/' . $branchCode . '/' . $service->cof_id;
+
+//         $service->invoice_number = $invoiceNumber;
+
+//         $service->total_cost =
+//             ($service->diagnostic_fee ?? 0) +
+//             ($service->repair_fee ?? 0) +
+//             ($service->sparepart_cost ?? 0);
+
+//         $service->save();
+//     }
+
+//     return response()->json([
+//         'success' => true,
+//         'invoice_number' => $service->invoice_number,
+//         'redirect_url' => route('ce.invoice.preview', $service->id)
+//     ]);
+// }
+
+// private function getBranchCode($prefix)
+// {
+//     return match ($prefix) {
+//         'A' => 'SMG',
+//         'B' => 'SLW',
+//         'C' => 'TGL',
+//         'D' => 'PKL',
+//         'E' => 'KDR',
+//         default => 'UNK',
+//     };
+// }
+
+// public function previewInvoice($id)
+// {
+//     $service = Service::with('branch')->findOrFail($id);
+
+//     if (!$service->invoice_number) {
+//         abort(404);
+//     }
+
+//     $pdf = Pdf::loadView('pdf.invoice', compact('service'));
+
+//     return $pdf->stream($service->invoice_number . '.pdf');
+// }
+
+// public function markAsPaid($id)
+// {
+//     $cases = Service::findOrFail($id);
+
+//     if ($case->invoice_number) {
+//         $case->payment_status = 'paid';
+//         $case->save();
+//     }
+
+//     return back()->with('success', 'Payment recorded');
+// }
 }

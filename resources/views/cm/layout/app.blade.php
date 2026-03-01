@@ -129,7 +129,7 @@
 
         <div class="header-center">
             <form action="{{ route('cm.case.search') }}" method="GET" class="d-flex">
-                <input type="text" name="search" value="{{ request('search') }}" class="form-control search-input" placeholder="Search by ID, SN, or Phone...">
+                <input type="text" name="search" value="{{ request('search') }}" class="form-control search-input" placeholder="Search by COF ID, SN, or Phone...">
                 <button class="btn search-btn" type="submit"><i class="bi bi-search"></i></button>
             </form>
         </div>

@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('lognote', function (Blueprint $table) {
-            //
-        });
+      Schema::create('cof_counters', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('branch_id')->constrained('branches')->onDelete('cascade');
+    $table->integer('current_number')->default(0);
+    $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+});
     }
 
     /**
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('lognote', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('cof_counters');
     }
 };

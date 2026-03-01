@@ -10,7 +10,7 @@ use Maatwebsite\Excel\Concerns\WithStyles;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class CofDataMC implements FromCollection, WithHeadings, WithStyles
+class QReqDataCM implements FromCollection, WithHeadings, WithStyles
 {
 // for master
     public function collection()
@@ -35,6 +35,7 @@ class CofDataMC implements FromCollection, WithHeadings, WithStyles
             'kondisi_unit',
             'repair_summary'
         )
+            ->where('status', 'quotation request')
         ->orderBy('received_date', 'desc')
         ->get();
     }
@@ -44,7 +45,7 @@ class CofDataMC implements FromCollection, WithHeadings, WithStyles
         $reportingDate = Carbon::now()->format('d F Y');
 
         return [
-            ['KLA View Case Report (GLOBAL)'], // Title
+            ['KLA Quotation Request Report'], // Title
             ['Export Date: ' . $reportingDate], 
             [], // Space before table
             [

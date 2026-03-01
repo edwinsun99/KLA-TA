@@ -9,21 +9,21 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-public function up()
+  public function up()
 {
-    Schema::table('branches', function (Blueprint $table) {
-        $table->text('address')->nullable();
-        $table->string('phone')->nullable();
+    Schema::table('services', function (Blueprint $table) {
+        $table->decimal('total_cost', 15, 2)->nullable();
+        $table->string('invoice_number')->nullable();
+        $table->enum('payment_status', ['unpaid', 'paid'])->default('unpaid');
     });
 }
-
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::table('branches', function (Blueprint $table) {
+        Schema::table('services', function (Blueprint $table) {
             //
         });
     }

@@ -96,7 +96,7 @@
             <p class="text-muted mb-0 small">Kelola seluruh permintaan perbaikan</p>
         </div>
         <div class="d-flex gap-2">
-            <a href="{{ route('excel.cofdata') }}" class="text-decoration-none">
+            <a href="{{ route('cm.excel.cofdata') }}" class="text-decoration-none">
                 <button class="btn-custom shadow-sm" style="background: #27ae60;">
                     <i class="bi bi-file-earmark-excel"></i> Export Excel
                 </button>
