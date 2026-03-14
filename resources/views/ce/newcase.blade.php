@@ -217,7 +217,7 @@ $(document).ready(function () {
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Model Type</label>
-                        <input type="text" id="nama_type" name="nama_type" class="form-control bg-light" placeholder="Terisi otomatis" readonly>
+                        <input type="text" id="nama_type" name="nama_type" class="form-control bg-light" placeholder="Terisi otomatis">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Serial Number</label>

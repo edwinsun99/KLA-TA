@@ -160,7 +160,7 @@
             <i class="bi bi-house-door"></i> <span>Home</span>
         </a>
 
-        <a href="{{ route('cm.quotreq.index') }}" class="menu-item {{ request()->routeIs('ce.quotreq.index') ? 'active' : '' }}">
+        <a href="{{ route('cm.qreq.index') }}" class="menu-item {{ request()->routeIs('ce.quotreq.index') ? 'active' : '' }}">
             <i class="bi bi-gem"></i> <span>Quotation Request</span>
         </a>
 

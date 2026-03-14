@@ -204,7 +204,7 @@ Route::prefix('cm')->name('cm.')->group(function () {
 
     // LOGDATE
     Route::get('cm/case/logdate', [CmCaseController::class, 'logdate'])->name('case.logdate');
-    Route::get('cm/quotreq/logdate', [CmQuotReqController::class, 'logdate'])->name('qreq.logdate');
+    Route::get('cm/qreq/logdate', [CmQuotReqController::class, 'logdate'])->name('qreq.logdate');
 
     // EXCEL
     Route::get('cm/excel/cofdata', [CmCaseController::class, 'excel'])->name('excel.cofdata');

@@ -31,11 +31,19 @@ class QuotReqController extends Controller
      */
 public function index()
 {
-    $cases = Service::where('status', 'quotation request')
+    // Ambil semua branch untuk dropdown
+    $branches = \App\Models\Branches::all();
+    $cases = Service::where('status', ['quotation request'])
                     ->orderBy('created_at', 'DESC')
                     ->get();
 
-    return view('cm.QuotReq', compact('cases'));
+    return view('cm.QuotReq', [
+        'cases' => $cases,
+        'branches' => $branches,
+        'selected_branch' => 'all',
+        'start_date' => null,   
+        'end_date' => null
+    ]);
 }
 
    private function getEnumValues(string $table, string $column): array

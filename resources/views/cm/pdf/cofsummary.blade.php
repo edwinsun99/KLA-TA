@@ -90,7 +90,9 @@
         <span class="brand-checkbox">☐ <b>Dell</b></span>
         <span class="brand-checkbox">☐ <b>ASUS</b></span>
         <span class="brand-checkbox">☐ <b>Acer</b></span>
-        <span class="brand-checkbox">☐ <b>TOSHIBA</b></span>
+        <span class="brand-checkbox">☐ <b>Advan</b></span>
+                <span class="brand-checkbox">☐ <b>Axioo</b></span>
+
         <span class="brand-checkbox">☐ _____________</span>
     </div>
     <p class="small" style="margin: 2px 0 4px 0; font-style: italic;">(harap di beri tanda ✓ sesuai dengan merk)</p>

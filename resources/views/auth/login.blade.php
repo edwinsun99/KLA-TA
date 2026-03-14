@@ -394,10 +394,7 @@
                             <span class="stat-number">3000+</span>
                             <span class="stat-label">Cases Handled</span>
                         </div>
-                        <div class="stat-box">
-                            <span class="stat-number">3 Days</span>
-                            <span class="stat-label">Average Repair Time</span>
-                        </div>
+                      
                         <div class="stat-box">
                             <span class="stat-number">30+</span>
                             <span class="stat-label">Support Brands</span>
@@ -406,16 +403,12 @@
 
                     <div class="brand-carousel">
                         <div class="brand-track">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg" alt="HP">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg" alt="Asus">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/1/18/Dell_logo_2016.svg" alt="Dell">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/b/bb/Lenovo_logo_2015.svg" alt="Lenovo">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c9/MSI_Logo.svg" alt="MSI">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Acer_Logo.svg" alt="Acer">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg" alt="Microsoft">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/HP_logo_2012.svg" alt="HP">
                             <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/ASUS_Logo.svg" alt="Asus">
                         </div>
@@ -436,7 +429,7 @@
                 </div>
 
                 <div class="footer">
-                    Powered by <strong>PT. Harmoni Putra Solusindo</strong> © 2026 | EB Group
+                    Powered by <strong>KLA Computer</strong> © 2026 | EB Group
                 </div>
             </div>
         </div>
