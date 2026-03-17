@@ -67,6 +67,8 @@ public function showLogin(Request $request)
                     return redirect('/cm/home')->with('success', 'Login berhasil sebagai CM!');
                 case 'CE':
                     return redirect('/ce/home')->with('success', 'Login berhasil sebagai CE!');
+                case 'CS':
+                    return redirect('/cs/home')->with('success', 'Login berhasil sebagai CS!');
                 default:
                     return redirect()->route('login')->with('error', 'Role tidak dikenali.');
             }

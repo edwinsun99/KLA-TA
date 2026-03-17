@@ -96,6 +96,15 @@ class UserSeeder extends Seeder
                 'updated_at' => '2026-01-05 03:35:28',
             ],
 
+             [
+                'id' => 18,
+                'username' => 'ayu',
+                'email' => 'ayu@infokom.putra.com',
+                'password' => '$2y$12$lM47oogX5IYdCABFQ1a9leK8lhi9NkWaV4S5.wZIpidVUzCVcUYJm',
+                'role' => 'CS',
+                'branch_id' => 1,   
+            ],
+
         ];
 
         foreach ($users as $user) {

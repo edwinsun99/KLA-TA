@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Request;
 
 // ===========================
 // 🔹 IMPORT CONTROLLERS
@@ -43,6 +44,16 @@ use App\Http\Controllers\ce\ProductController as CeProductController;
 use App\Http\Controllers\ce\ErfController as CeErfController;
 use App\Http\Controllers\ce\FinishController as CeFinishController;
 use App\Http\Controllers\ce\ProfileController as CeProfileController;
+
+// CE CONTROLLERS
+use App\Http\Controllers\cs\ServiceController as CsServiceController;
+use App\Http\Controllers\cs\HomeController as CsHomeController;
+use App\Http\Controllers\cs\CaseController as CsCaseController;
+use App\Http\Controllers\cs\DetailController as CsDetailController;
+use App\Http\Controllers\cs\ProductController as CsProductController;
+use App\Http\Controllers\cs\ErfController as CsErfController;
+use App\Http\Controllers\cs\FinishController as CsFinishController;
+use App\Http\Controllers\cs\ProfileController as CsProfileController;
 
 // Customer Controllers
 use App\Http\Controllers\customer\TrackCaseController;
@@ -342,36 +353,154 @@ Route::get('/get-product-type',
 
 });
 
-
 Route::post('/ce/case/{id}/note', 
     [CeDetailController::class, 'addNote'])
     ->name('ce.case.note');
-
-
 });
 
-
 // ===========================
-// ⚡ ALIAS: CS ROUTES → ARAHKAN KE CE
-// (agar semua endpoint lama CS tetap bisa dipakai)
+// 🔹 CS ROUTES
 // ===========================
-Route::prefix('cs')->group(function () {
-    Route::get('/home', fn() => redirect()->route('ce.home'));
-    Route::get('/services', [CeServiceController::class, 'index'])->name('cs.services.index');
-    Route::post('/services', [CeServiceController::class, 'store'])->name('cs.services.store');
 
-    Route::get('/case', [CeCaseController::class, 'index'])->name('cs.case.index');
-    Route::get('/case/{id}', [CeDetailController::class, 'show'])->name('cs.case.show');
-    Route::get('/cases/new', fn() => redirect()->route('cases.new'))->name('cs.cases.new');
+Route::group([], function () {
 
-    Route::get('/case/{id}/pdf', [CeDetailController::class, 'downloadPdf'])->name('cs.case.downloadPdf');
-    Route::get('/case/{id}/pdf/preview', [CeDetailController::class, 'previewPdf'])->name('cs.case.previewPdf');
+    Route::get('/cs/home', function (Request $request) {
+        if (!Session::get('login') || Session::get('role') !== 'CS') {
+            return redirect()->route('login')->with('error', 'Akses ditolak.');
+        }
+        return app(CsHomeController::class)->index($request);
+    })->name('cs.home');
 
-    Route::get('/cases/search', [CeCaseController::class, 'search'])->name('cs.case.search');
-    Route::get('/excel/cofdata', [CeCaseController::class, 'excel'])->name('cs.excel.cofdata');
+
+    Route::get('/cs/services', [CsServiceController::class, 'index'])->name('cs.services.index');
+    Route::post('/cs/services', [CsServiceController::class, 'store'])->name('cs.services.store');
+
+    Route::get('/cs/case', [CsCaseController::class, 'index'])->name('cs.case.index');
+
+    Route::get('/cs/case/logdate', [CsCaseController::class, 'logdate'])->name('cs.case.logdate');
+    Route::get('/cs/finish/logdate', [CsFinishController::class, 'logdate'])->name('cs.finish.logdate');
+
+    Route::get('/cs/cases/new', fn() => view('cs.newcase'))->name('cs.cases.new');
+    Route::get('/cs/newcase', [CsCaseController::class, 'create'])->name('cs.newcase');
+
+
+    Route::get('/cs/case/{id}', [CsDetailController::class, 'show'])->name('cs.case.show');
+
+    Route::get('/cs/case/{id}/pdf', [CsDetailController::class, 'downloadPdf'])->name('cs.case.downloadPdf');
+    Route::get('/cs/case/{id}/pdf/preview', [CsDetailController::class, 'previewPdf'])->name('cs.case.previewPdf');
+
+
+    Route::get('/cs/cases/search', [CsCaseController::class, 'search'])->name('cs.case.search');
+
+    Route::get('/cs/excel/cofdata', [CsCaseController::class, 'excel'])->name('cs.excel.cofdata');
+
+
+    // ===========================
+    // ERF ROUTES
+    // ===========================
+
+    Route::prefix('cs')->name('cs.')->group(function () {
+
+        Route::get('/select-case-for-erf', [CsErfController::class, 'selectCase'])
+            ->name('erf.select');
+
+        Route::get('/case/{id}/upload-erf', [CsErfController::class, 'form'])
+            ->name('erf.form');
+
+        Route::post('/case/{id}/upload-erf', [CsErfController::class, 'upload'])
+            ->name('erf.upload');
+
+        Route::get('/case/{id}/erf-preview', [CsErfController::class, 'preview'])
+            ->name('erf.preview');
+
+        Route::get('/case/{id}/erf-download', [CsErfController::class, 'download'])
+            ->name('erf.download');
+
+    });
+
+
+    // ===========================
+    // CASE MANAGEMENT
+    // ===========================
+
+    Route::prefix('cs')->name('cs.')->group(function () {
+
+        Route::get('/case/{id}', [CsDetailController::class, 'status'])
+            ->name('case.show');
+
+        Route::post('/case/{id}/update-all', 
+            [CsDetailController::class, 'updateAll'])
+            ->name('case.updateAll');
+
+
+        Route::get('/profile', [CsProfileController::class, 'edit'])
+            ->name('profile.edit');
+
+        Route::post('/profile/update', [CsProfileController::class, 'update'])
+            ->name('profile.update');
+
+        Route::post('/profile/password', [CsProfileController::class, 'updatePassword'])
+            ->name('profile.password');
+
+
+        // Generate Invoice
+        Route::post('/create/invoice/{id}', 
+            [CsFinishController::class, 'create'])
+            ->name('invoice.create');
+
+
+        Route::get('/invoice/{id}/preview', [CsFinishController::class, 'previewInvoice'])
+            ->name('invoice.preview');
+
+
+        // Mark as Paid
+        Route::post('/paid/{id}', 
+            [CsFinishController::class, 'markAsPaid'])
+            ->name('invoice.paid');
+
+    });
+
+
+    // ===========================
+    // FINISH REPAIR
+    // ===========================
+
+    Route::prefix('cs')->name('cs.')->group(function () {
+
+        Route::get('/finish-repair', [CsFinishController::class, 'index'])
+            ->name('finish.repair');
+
+        Route::get('/get-product-type', 
+            [App\Http\Controllers\cs\ProductController::class, 'getProductType'])
+            ->name('getProductType');
+    });
+
+    Route::post('/cs/case/{id}/note', 
+        [CsDetailController::class, 'addNote'])
+        ->name('cs.case.note');
+});
+
+// // ===========================
+// // ⚡ ALIAS: CS ROUTES → ARAHKAN KE CE
+// // (agar semua endpoint lama CS tetap bisa dipakai)
+// // ===========================
+// Route::prefix('cs')->group(function () {
+//     Route::get('/home', fn() => redirect()->route('ce.home'));
+//     Route::get('/services', [CeServiceController::class, 'index'])->name('cs.services.index');
+//     Route::post('/services', [CeServiceController::class, 'store'])->name('cs.services.store');
+
+//     Route::get('/case', [CeCaseController::class, 'index'])->name('cs.case.index');
+//     Route::get('/case/{id}', [CeDetailController::class, 'show'])->name('cs.case.show');
+//     Route::get('/cases/new', fn() => redirect()->route('cases.new'))->name('cs.cases.new');
+
+//     Route::get('/case/{id}/pdf', [CeDetailController::class, 'downloadPdf'])->name('cs.case.downloadPdf');
+//     Route::get('/case/{id}/pdf/preview', [CeDetailController::class, 'previewPdf'])->name('cs.case.previewPdf');
+
+//     Route::get('/cases/search', [CeCaseController::class, 'search'])->name('cs.case.search');
+//     Route::get('/excel/cofdata', [CeCaseController::class, 'excel'])->name('cs.excel.cofdata');
     
-});
-Route::middleware(['web', 'check.session'])->prefix('ce')->group(function () {
-    Route::get('/home', [CeHomeController::class, 'index'])->name('ce.home');
-    Route::post('/services', [CeServiceController::class, 'store'])->name('ce.services.store');
-});
+// });
+// Route::middleware(['web', 'check.session'])->prefix('ce')->group(function () {
+//     Route::get('/home', [CeHomeController::class, 'index'])->name('ce.home');
+//     Route::post('/services', [CeServiceController::class, 'store'])->name('ce.services.store');
+// });
