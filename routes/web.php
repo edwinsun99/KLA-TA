@@ -248,13 +248,13 @@ Route::prefix('cm')->name('cm.')->group(function () {
 // ===========================
 // 🔹 CE ROUTES
 // ===========================
-Route::group([], function () {
-    Route::get('/ce/home', function () {
-        if (!Session::get('login') || Session::get('role') !== 'CE') {
-            return redirect()->route('login')->with('error', 'Akses ditolak.');
-        }
-        return app(CeHomeController::class)->index();
-    })->name('ce.home');
+    Route::group([], function () {
+        Route::get('/ce/home', function (Request $request) {
+            if (!Session::get('login') || Session::get('role') !== 'CE') {
+                return redirect()->route('login')->with('error', 'Akses ditolak.');
+            }
+            return app(CeHomeController::class)->index($request);
+        })->name('ce.home');
 
     // Route::get('/home', function () {
     //     if (!Session::get('login') || Session::get('role') !== 'CE') {

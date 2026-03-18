@@ -15,9 +15,9 @@ return new class extends Migration
     $table->id();
     $table->string('username')->unique();
     $table->string('email')->unique();
-    $table->string('profile_photo');
+    $table->string('profile_photo')->nullable(); // Artinya: boleh kosong/null
     $table->string('password');
-    $table->string('role', 50)->nullable();
+    $table->string('role', 50);
     $table->foreignId('branch_id')->nullable()->constrained('branches')->nullOnDelete();
     $table->timestamps();
 });

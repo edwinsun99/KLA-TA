@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Support\Facades\Schema; // <--- TAMBAHKAN BARIS INI
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -12,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
    public function run(): void
 {
+    // Matikan check foreign key
+    Schema::disableForeignKeyConstraints();
+
     $this->call([
         BranchSeeder::class,
     ]);
@@ -27,6 +31,9 @@ class DatabaseSeeder extends Seeder
      $this->call([
         UserSeeder::class,
     ]);
+
+    // Hidupkan lagi setelah selesai
+    Schema::enableForeignKeyConstraints();
 }
 }
 

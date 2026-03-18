@@ -7,19 +7,16 @@ use App\Models\Branches;
 
 class BranchSeeder extends Seeder
 {
-    public function run(): void
+   public function run(): void
     {
-        $branches = [
+        // Gunakan collect() agar lebih Laravel-style
+        collect([
             [
                 'id' => 1,
                 'name' => 'Semarang',
                 'prefix' => 'A',
                 'address' => 'Ruko Mataram Plaza, D8-9, Jagalan, Kec. Semarang Tengah, Kota Semarang, Jawa Tengah 50613',
                 'phone' => '0895616797777',
-                'latitude' => 0.0000000,
-                'longitude' => 0.0000000,
-                'open_at' => '00:00:00',
-                'close_at' => '00:00:00',
             ],
             [
                 'id' => 2,
@@ -27,10 +24,6 @@ class BranchSeeder extends Seeder
                 'prefix' => 'B',
                 'address' => 'Jl. Flores Baru, Langon, Kudaile, Kec. Slawi, Kabupaten Tegal, Jawa Tengah 52413',
                 'phone' => '085185068679',
-                'latitude' => 0.0000000,
-                'longitude' => 0.0000000,
-                'open_at' => '00:00:00',
-                'close_at' => '00:00:00',
             ],
             [
                 'id' => 3,
@@ -38,10 +31,6 @@ class BranchSeeder extends Seeder
                 'prefix' => 'C',
                 'address' => 'Jl. Sultan Agung No.49, Kejambon, Kec. Tegal Tim., Kota Tegal, Jawa Tengah',
                 'phone' => '085165867970',
-                'latitude' => 0.0000000,
-                'longitude' => 0.0000000,
-                'open_at' => '00:00:00',
-                'close_at' => '00:00:00',
             ],
             [
                 'id' => 4,
@@ -49,10 +38,6 @@ class BranchSeeder extends Seeder
                 'prefix' => 'D',
                 'address' => 'Jl. Imam Bonjol No.9, Kergon, Kec. Pekalongan Bar., Kota Pekalongan, Jawa Tengah 51113',
                 'phone' => '085724968191',
-                'latitude' => 0.0000000,
-                'longitude' => 0.0000000,
-                'open_at' => '00:00:00',
-                'close_at' => '00:00:00',
             ],
             [
                 'id' => 5,
@@ -60,18 +45,22 @@ class BranchSeeder extends Seeder
                 'prefix' => 'E',
                 'address' => 'Jl. Pahlawan Kusuma Bangsa No.21, Banjaran, Kec. Kota, Kota Kediri, Jawa Timur 64129',
                 'phone' => '08986561999',
-                'latitude' => 0.0000000,
-                'longitude' => 0.0000000,
+            ],
+
+        ])->each(function ($branch) {
+            // Sisa field yang default (0.0000 atau 00:00:00) 
+            // bisa kita tambahkan otomatis di sini agar array di atas lebih bersih
+            $defaults = [
+                'latitude' => 0.0,
+                'longitude' => 0.0,
                 'open_at' => '00:00:00',
                 'close_at' => '00:00:00',
-            ],
-        ];
+            ];
 
-        foreach ($branches as $branch) {
             Branches::updateOrCreate(
                 ['id' => $branch['id']],
-                $branch
+                array_merge($defaults, $branch)
             );
-        }
+        });
     }
 }
