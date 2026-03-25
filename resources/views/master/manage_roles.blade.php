@@ -1,6 +1,6 @@
 @extends('master.layout.app')
 
-@section('title', 'Manage Roles')
+@section('title', 'Manage Users')
 
 @section('content')
 
@@ -148,12 +148,12 @@
 <div class="container py-5">
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-5 gap-3">
         <div>
-            <h4 class="mb-1">Manage Roles</h4>
+            <h4 class="mb-1">Manage Users</h4>
             <p class="text-muted mb-0">Kelola akun pengguna dan role dalam sistem.</p>
         </div>
     
         <button class="btn btn-primary-custom shadow-sm" data-bs-toggle="modal" data-bs-target="#addRoleModal">
-            <i class="bi bi-plus-lg me-2"></i> Add New Role
+            <i class="bi bi-plus-lg me-2"></i> Add New User
         </button>
     </div>
 
@@ -237,13 +237,13 @@
             <form action="{{ route('roles.store') }}" method="POST">
                 @csrf
                 <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold">New Member</h5>
+                    <h5 class="modal-title fw-bold">New User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary text-uppercase">Username</label>
-                        <input type="text" name="un" class="form-control" placeholder="e.g. johndoe" required>
+                        <input type="text" name="username" class="form-control" placeholder="e.g. johndoe" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary text-uppercase">Email Address</label>
@@ -252,21 +252,34 @@
                     <div class="mb-3">
                         <label class="form-label small fw-bold text-secondary text-uppercase">Security Password</label>
                         <div class="input-group">
-                            <input type="password" name="pw" id="addPw" class="form-control" required>
+                            <input type="password" name="password" id="addPw" class="form-control" required>
                             <span class="input-group-text input-group-text-custom togglePassword" data-target="addPw">
                                 <i class="bi bi-eye text-muted"></i>
                             </span>
                         </div>
                     </div>
+
                     <div class="mb-0">
                         <label class="form-label small fw-bold text-secondary text-uppercase">Assign Role</label>
                         <select name="role" class="form-select" required>
                             <option value="">-- Select Role --</option>
                             <option value="CS">Customer Service</option>
                             <option value="CE">Customer Engineer</option>
-                            <option value="CM">Call Management</option>
                         </select>
                     </div>
+
+                      <div class="mb-3">
+    <label class="form-label small fw-bold text-secondary text-uppercase">Branch</label>
+    <select name="branch_id" class="form-select" required>
+        <option value="">-- Pilih Cabang --</option>
+        @foreach($branches as $branch)
+            <option value="{{ $branch->id }}">
+                {{ $branch->name }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
                 </div>
                 <div class="modal-footer border-0">
                     <button type="button" class="btn btn-light rounded-3 px-4 fw-semibold" data-bs-dismiss="modal">Cancel</button>

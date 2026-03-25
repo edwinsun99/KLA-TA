@@ -184,11 +184,11 @@ Route::group([], function () {
 
       
       
-    Route::prefix('master')->group(function () {
-        Route::get('/manage-roles', [RoleController::class, 'index'])->name('roles.index');
-        Route::post('/manage-roles', [RoleController::class, 'store'])->name('roles.store');
-        Route::delete('/manage-roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-        Route::put('/manage-roles/{id}', [RoleController::class, 'update'])->name('roles.update');
+        Route::prefix('master')->group(function () {
+            Route::get('/master/manage-users', [RoleController::class, 'index'])->name('roles.index');
+            Route::post('/save-users', [RoleController::class, 'store'])->name('roles.store');
+        Route::delete('/destroy-roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
+        Route::put('/update-roles/{id}', [RoleController::class, 'update'])->name('roles.update');
 
         Route::get('/get-product-type', [MasterProductController::class, 'getProductType'])->name('getProductType');
     });
