@@ -4,13 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Carbon\Carbon;
+use App\Models\Branches;
 
 class UserSeeder extends Seeder
 {
-   public function run(): void
+    public function run(): void
     {
-        // 1. DATA TETAP (Buat lo login testing)
+        // 1. DATA TETAP (Login testing)
+
         // Master Pusat
         User::updateOrCreate(
             ['email' => 'manager@infokom.putra.com'],
@@ -33,18 +34,23 @@ class UserSeeder extends Seeder
             ]
         );
 
-        // 2. DATA OTOMATIS (Pake Factory + Faker)
-        // 1 CE di Branch 1 (Semarang)
-        User::factory()->create([
-            'role'      => 'CE',
-            'branch_id' => 1,
-        ]);
+        // 🔥 AMBIL SEMUA BRANCH
+        $branches = Branches::all();
 
-        // 1 CS di Branch 2 (Slawi)
-        User::factory()->create([
-            'role'      => 'CS',
-            'branch_id' => 2,
+        // 🔁 LOOP SETIAP BRANCH
+        foreach ($branches as $branch) {
+
+            // 🔧 5 CE per branch
+            User::factory()->count(5)->create([
+                'role' => 'CE',
+                'branch_id' => $branch->id,
             ]);
 
+            // 🔧 2 CS per branch
+            User::factory()->count(2)->create([
+                'role' => 'CS',
+                'branch_id' => $branch->id,
+            ]);
         }
     }
+}

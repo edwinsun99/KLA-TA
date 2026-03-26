@@ -168,6 +168,7 @@
                                 <th>Username</th>
                                 <th>Email</th>
                                 <th>Role</th>
+                                <th>Cabang</th>
                                 <th class="text-center">Actions</th>
                             </tr>
                         </thead>
@@ -196,6 +197,14 @@
                                     <span class="badge-role {{ $roleClass }}">
                                         {{ $user->role }}
                                     </span>
+
+                                    <td>
+    @if($user->branch)
+        {{ $user->branch->name }}
+    @else
+        Pusat
+    @endif
+</td>
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

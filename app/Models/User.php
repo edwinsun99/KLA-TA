@@ -35,7 +35,7 @@ class User extends Authenticatable
     }
     public function branch()
 {
-    return $this->belongsTo(Branches::class);
+    return $this->belongsTo(Branches::class, 'branch_id');
 }
 
 }
