@@ -187,16 +187,31 @@
                     <li class="text-center pb-3 border-bottom mb-2">
                         <img src="{{ Auth::user()->profile_photo ? asset('storage/'.Auth::user()->profile_photo) : asset('images/default-avatar.png') }}" 
                              width="70" height="70" class="rounded-circle mb-2 border" style="object-fit: cover;">
-                        <div class="fw-bold fs-5 text-dark">{{ Auth::user()->username }}</div>
-                        <small class="text-muted d-block">
-                            {{ Str::contains(Auth::user()->email, 'manager') ? 'Manager' : 'Customer Engineer' }}
-                            @php
-                                $suffix = Str::after(Auth::user()->username, '@');
-                                $branch = match($suffix) { 'smg'=>'Semarang','slw'=>'Slawi','tgl'=>'Tegal','kdr'=>'Kediri','pkl'=>'Pekalongan', default=>'Head Office' };
-                            @endphp
-                            @<span>{{ $branch }}</span>
-                        </small>
-                    </li>
+                                         
+                             <div class="fw-bold fs-5 text-dark">
+    {{ Auth::user()->username }}
+</div>
+
+<small class="text-muted d-block">
+    @php
+        $user = Auth::user();
+
+        // 🔹 Mapping role
+        $roleName = match($user->role) {
+            'MASTER' => 'Manager',
+            'CM' => 'Call Management',
+            'CS' => 'Customer Service',
+            'CE' => 'Customer Engineer',
+            default => 'Unknown Role',
+        };
+
+        // 🔹 Nama branch atau pusat
+        $branchName = $user->branch->name ?? 'Pusat';
+    @endphp
+
+    {{ $roleName }} @ {{ $branchName }}
+</small>
+
                     <li><a class="dropdown-item py-2" href="{{ route('master.profile.edit') }}"><i class="bi bi-person-gear me-2"></i> Edit Profil</a></li>
                     <li><a class="dropdown-item py-2 text-danger" href="#" onclick="confirmLogout(event)"><i class="bi bi-box-arrow-right me-2"></i> Sign Out</a></li>
                 </ul>
