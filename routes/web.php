@@ -62,6 +62,9 @@ use App\Http\Controllers\customer\ServiceLocationController;
 // OTHER CONTROLLERS
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+
+
 
 // ===========================
 // 🔐 AUTH ROUTES
@@ -69,6 +72,10 @@ use App\Http\Controllers\Auth\LoginController;
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'loginProcess'])->name('login.process');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::get('/register', [RegisterController::class, 'create'])->name('register');
+Route::post('/enroll', [RegisterController::class, 'store'])->name('register.process');
+
 
 // Default redirect ke login
 Route::get('/', fn() => redirect()->route('login'));

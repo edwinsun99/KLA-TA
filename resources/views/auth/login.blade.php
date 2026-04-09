@@ -463,6 +463,11 @@
                     <span id="togglePassword">🐼</span>
                 </div>
 
+    <p class="text-center mt-3">
+    Belum punya akun?
+    <a href="{{ route('register') }}" class="text-primary fw-bold">Daftar</a>
+</p>
+
                 <div class="captcha-container">
                     <div class="captcha-display">{{ $captcha }}</div>
                     <div style="display: flex; gap: 10px;">
@@ -479,6 +484,12 @@
             </form>
         </div>
     </div>
+
+      @if(session('success'))
+<script>
+    alert("{{ session('success') }}");
+</script>
+@endif
 
     <script>
         const passwordInput = document.getElementById("password");
