@@ -58,6 +58,10 @@ use App\Http\Controllers\cs\ProfileController as CsProfileController;
 // Customer Controllers
 use App\Http\Controllers\customer\TrackCaseController;
 use App\Http\Controllers\customer\ServiceLocationController;
+use App\Http\Controllers\customer\HomeController as CustHomeController;
+use App\Http\Controllers\customer\ConsultationController;
+use App\Http\Controllers\customer\CaseController;
+use App\Http\Controllers\customer\NotificationController;
 
 // OTHER CONTROLLERS
 use App\Http\Controllers\MasterController;
@@ -83,6 +87,16 @@ Route::get('/', fn() => redirect()->route('login'));
 // ===========================
 // 🔹 Customer ROUTES
 // ===========================
+
+Route::group([], function () {
+    Route::get('/cust/home', function (Request $request) {
+        if (!Session::get('login') || Session::get('role') !== 'CUSTOMER') {
+            return redirect()->route('login')->with('error', 'Akses ditolak.');
+        }
+        return app(CustHomeController::class)->index($request);
+    })->name('cust.home');
+    
+
 Route::get('/track', [TrackCaseController::class, 'index'])->name('track.form');
 Route::post('/track/check', [TrackCaseController::class, 'check'])->name('track.check');
 Route::get('/track/{id}', [TrackCaseController::class, 'show'])->name('track.journey');
@@ -91,6 +105,21 @@ Route::get('/service-location', [ServiceLocationController::class, 'index'])->na
 
 // API untuk kirim data branches JSON
 Route::get('/api/branches', [ServiceLocationController::class, 'branchesJson'])->name('api.branches');
+
+Route::prefix('customer')->group(function () {
+
+    // Konsultasi
+    Route::get('/consultation/new', [ConsultationController::class, 'create'])->name('consul.new');
+    Route::get('/consultation/active', [ConsultationController::class, 'active'])->name('consul.act');
+    Route::get('/consultation/history', [ConsultationController::class, 'history'])->name('consul.hst');
+
+    // My Cases
+    Route::get('/cases', [CaseController::class, 'index'])->name('my.cases');
+
+    // Notifikasi
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('cust.notif');
+
+});
 
 // ===========================
 // 🔹 MASTER ROUTES
@@ -510,4 +539,5 @@ Route::group([], function () {
 // Route::middleware(['web', 'check.session'])->prefix('ce')->group(function () {
 //     Route::get('/home', [CeHomeController::class, 'index'])->name('ce.home');
 //     Route::post('/services', [CeServiceController::class, 'store'])->name('ce.services.store');
-// });
+
+});
