@@ -59,7 +59,7 @@ use App\Http\Controllers\cs\ProfileController as CsProfileController;
 use App\Http\Controllers\customer\TrackCaseController;
 use App\Http\Controllers\customer\ServiceLocationController;
 use App\Http\Controllers\customer\HomeController as CustHomeController;
-use App\Http\Controllers\customer\ConsultationController;
+use App\Http\Controllers\customer\NewconsulController;
 use App\Http\Controllers\customer\CaseController;
 use App\Http\Controllers\customer\NotificationController;
 
@@ -109,9 +109,10 @@ Route::get('/api/branches', [ServiceLocationController::class, 'branchesJson'])-
 Route::prefix('customer')->group(function () {
 
     // Konsultasi
-    Route::get('/consultation/new', [ConsultationController::class, 'create'])->name('consul.new');
-    Route::get('/consultation/active', [ConsultationController::class, 'active'])->name('consul.act');
-    Route::get('/consultation/history', [ConsultationController::class, 'history'])->name('consul.hst');
+    Route::get('/consultation/new', [NewconsulController::class, 'create'])->name('consul.new');
+    Route::get('/consultation/active', [NewconsulController::class, 'active'])->name('consul.act');
+    Route::post('/consultation/send', [NewconsulController::class, 'store'])->name('consul.store');
+    Route::get('/consultation/history', [NewconsulController::class, 'history'])->name('consul.hst');
 
     // My Cases
     Route::get('/cases', [CaseController::class, 'index'])->name('my.cases');
