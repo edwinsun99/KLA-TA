@@ -64,7 +64,7 @@ class NewconsulController extends Controller
         ]);
 
         return redirect()
-            ->route('consul.act')
+            ->route('consul.detail',  $consultationId)
             ->with('success', 'Konsultasi berhasil dibuat.');
     }
 

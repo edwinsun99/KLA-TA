@@ -10,7 +10,6 @@
         --primary-purple: #7d3cff;
         --primary-purple-2: #6b2fd6;
         --soft-purple: #f3ebff;
-        --accent-yellow: #ffc107;
         --glass-bg: rgba(255, 255, 255, 0.75);
         --glass-border: rgba(255, 255, 255, 0.46);
         --text-dark: #2d3436;
@@ -24,13 +23,16 @@
     }
 
     .page-wrap {
+        width: 100%;
+        max-width: none;
         display: grid;
         gap: 20px;
-        padding-bottom: 40px;
+        padding: 0 0 40px 0;
     }
 
     .hero-card,
     .glass-card {
+        width: 100%;
         background: var(--glass-bg);
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
@@ -40,7 +42,7 @@
     }
 
     .hero-card {
-        padding: 24px;
+        padding: 28px;
     }
 
     .breadcrumb-mini {
@@ -65,18 +67,11 @@
         color: var(--muted);
         font-size: 0.96rem;
         line-height: 1.65;
-        max-width: 860px;
-    }
-
-    .content-grid {
-        display: grid;
-        grid-template-columns: 1.05fr 0.95fr;
-        gap: 20px;
-        align-items: start;
+        max-width: 900px;
     }
 
     .glass-card {
-        padding: 22px;
+        padding: 24px;
     }
 
     .section-title {
@@ -84,7 +79,8 @@
         justify-content: space-between;
         align-items: center;
         gap: 10px;
-        margin-bottom: 16px;
+        margin-bottom: 18px;
+        flex-wrap: wrap;
     }
 
     .section-title h4 {
@@ -148,7 +144,7 @@
     }
 
     .form-textarea {
-        min-height: 150px;
+        min-height: 170px;
         resize: vertical;
     }
 
@@ -159,76 +155,12 @@
         line-height: 1.5;
     }
 
-    .info-list {
-        display: grid;
-        gap: 12px;
-    }
-
-    .info-item {
-        display: flex;
-        gap: 12px;
-        align-items: flex-start;
-        padding: 14px 16px;
-        background: rgba(255,255,255,0.74);
-        border: 1px solid rgba(125,60,255,0.08);
-        border-radius: 16px;
-    }
-
-    .info-bullet {
-        width: 34px;
-        height: 34px;
-        border-radius: 12px;
-        background: var(--soft-purple);
-        color: var(--primary-purple);
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 900;
-        flex-shrink: 0;
-    }
-
-    .info-title {
-        margin: 0 0 4px 0;
-        font-weight: 800;
-        color: var(--text-dark);
-        font-size: 0.95rem;
-    }
-
-    .info-text {
-        margin: 0;
-        color: var(--muted);
-        font-size: 0.9rem;
-        line-height: 1.55;
-    }
-
-    .mini-summary {
-        margin-top: 16px;
-        padding: 16px;
-        border-radius: 18px;
-        background: rgba(243, 235, 255, 0.62);
-        border: 1px dashed rgba(125, 60, 255, 0.18);
-    }
-
-    .mini-summary h5 {
-        margin: 0 0 10px 0;
-        font-size: 0.98rem;
-        font-weight: 800;
-        color: var(--text-dark);
-    }
-
-    .mini-summary ul {
-        margin: 0;
-        padding-left: 18px;
-        color: var(--muted);
-        font-size: 0.9rem;
-        line-height: 1.75;
-    }
-
     .action-row {
         display: flex;
         gap: 12px;
         flex-wrap: wrap;
-        margin-top: 18px;
+        margin-top: 20px;
+        justify-content: flex-end;
     }
 
     .btn-primary-soft,
@@ -263,6 +195,72 @@
         color: inherit;
     }
 
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .info-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 16px;
+        background: rgba(255,255,255,0.74);
+        border: 1px solid rgba(125,60,255,0.08);
+        border-radius: 18px;
+        min-height: 100%;
+    }
+
+    .info-bullet {
+        width: 34px;
+        height: 34px;
+        border-radius: 12px;
+        background: var(--soft-purple);
+        color: var(--primary-purple);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        flex-shrink: 0;
+    }
+
+    .info-title {
+        margin: 0 0 4px 0;
+        font-weight: 800;
+        color: var(--text-dark);
+        font-size: 0.95rem;
+    }
+
+    .info-text {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.55;
+    }
+
+    .mini-summary {
+        padding: 18px;
+        border-radius: 18px;
+        background: rgba(243, 235, 255, 0.62);
+        border: 1px dashed rgba(125, 60, 255, 0.18);
+    }
+
+    .mini-summary h5 {
+        margin: 0 0 10px 0;
+        font-size: 0.98rem;
+        font-weight: 800;
+        color: var(--text-dark);
+    }
+
+    .mini-summary ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: 0.9rem;
+        line-height: 1.75;
+    }
+
     .subgroup-box {
         padding: 16px;
         border-radius: 18px;
@@ -287,20 +285,31 @@
     .divider {
         height: 1px;
         background: var(--line);
-        margin: 16px 0;
+        margin: 20px 0;
+    }
+
+    @media (max-width: 1200px) {
+        .info-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
     }
 
     @media (max-width: 992px) {
-        .content-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .form-grid {
+        .form-grid,
+        .info-grid {
             grid-template-columns: 1fr;
         }
 
         .form-group.full {
             grid-column: span 1;
+        }
+
+        .action-row {
+            justify-content: stretch;
+        }
+
+        .action-row > * {
+            width: 100%;
         }
     }
 </style>
@@ -322,164 +331,127 @@
         </p>
     </div>
 
-    <div class="content-grid">
-        <div class="glass-card">
-            <div class="section-title">
-                <h4>Form Konsultasi</h4>
-                <span class="section-badge">Tahap Screening</span>
-            </div>
-
-            <form action="{{ route('consul.store') }}" method="POST">
-                @csrf
-
-                <div class="form-grid">
-                    <div class="form-group full">
-                        <label class="form-label" for="subject">Judul Konsultasi <span class="required">*</span></label>
-                        <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" placeholder="Contoh: Laptop tidak mau menyala">
-                        <div class="hint">Buat judul singkat dan jelas supaya CM cepat paham inti masalah.</div>
-                        @error('subject')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="product_group">Product Group <span class="required">*</span></label>
-                        <select id="product_group" name="product_group" class="form-select">
-                            <option value="">Pilih product group</option>
-                            <option value="PSG" {{ old('product_group') == 'PSG' ? 'selected' : '' }}>PSG - Personal Systems Group</option>
-                            <option value="IPG" {{ old('product_group') == 'IPG' ? 'selected' : '' }}>IPG - Imaging & Printing Group</option>
-                        </select>
-                        <div class="hint">Pilih group sesuai kategori produk yang bermasalah.</div>
-                        @error('product_group')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label" for="category">Kategori Masalah <span class="required">*</span></label>
-                        <select id="category" name="category" class="form-select">
-                            <option value="">Pilih kategori</option>
-                            <option value="hardware" {{ old('category') == 'hardware' ? 'selected' : '' }}>Hardware</option>
-                            <option value="software" {{ old('category') == 'software' ? 'selected' : '' }}>Software / Driver</option>
-                            <option value="network" {{ old('category') == 'network' ? 'selected' : '' }}>Network</option>
-                            <option value="consumable" {{ old('category') == 'consumable' ? 'selected' : '' }}>Consumable / Supply</option>
-                            <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Lainnya</option>
-                        </select>
-                        <div class="hint">Kalau pilih <b>Lainnya</b>, jelaskan di deskripsi masalah.</div>
-                        @error('category')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- <div class="form-group">
-                        <label class="form-label" for="device_type">Jenis Device <span class="required">*</span></label>
-                        <select id="device_type" name="device_type" class="form-select">
-                            <option value="">Pilih device</option>
-                            <option value="printer" {{ old('device_type') == 'printer' ? 'selected' : '' }}>Printer</option>
-                            <option value="laptop" {{ old('device_type') == 'laptop' ? 'selected' : '' }}>Laptop</option>
-                            <option value="pc" {{ old('device_type') == 'pc' ? 'selected' : '' }}>PC</option>
-                            <option value="other" {{ old('device_type') == 'other' ? 'selected' : '' }}>Lainnya</option>
-                        </select>
-                        @error('device_type')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div> -->
-
-                    <div class="form-group">
-                        <label class="form-label" for="brand_model">Brand / Model</label>
-                        <input type="text" id="brand_model" name="brand_model" class="form-control" value="{{ old('brand_model') }}" placeholder="Contoh: Epson>
-                        <div class="hint">Opsional, tapi sangat membantu untuk screening awal.</div>
-                        @error('brand_model')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- <div class="form-group">
-                        <label class="form-label" for="serial_number">Serial Number</label>
-                        <input type="text" id="serial_number" name="serial_number" class="form-control" value="{{ old('serial_number') }}" placeholder="Opsional">
-                        <div class="hint">Boleh dikosongkan dulu karena ini masih tahap konsultasi.</div>
-                        @error('serial_number')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div> -->
-
-                    <div class="form-group full">
-                        <label class="form-label" for="description">Deskripsi Masalah <span class="required">*</span></label>
-                        <textarea id="description" name="description" class="form-textarea" placeholder="Ceritakan gejala, kronologi, dan kondisi unit secara singkat..."><?php echo e(old('description')); ?></textarea>
-                        <div class="hint">Kalau pilih kategori <b>Lainnya</b>, bagian ini wajib menjelaskan masalahnya.</div>
-                        @error('description')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-                </div>
-
-                <div class="action-row">
-                    <a href="{{ route('cust.home') }}" class="btn-secondary-soft">Cancel</a>
-                    <button type="submit" class="btn-primary-soft">Start Konsultasi</button>
-                </div>
-            </form>
+    <div class="glass-card">
+        <div class="section-title">
+            <h4>Form Konsultasi</h4>
+            <span class="section-badge">Tahap Screening</span>
         </div>
 
-        <!-- <div class="glass-card">
-            <div class="section-title">
-                <h4>Petunjuk Isi Form</h4>
-            </div>
+        <form action="{{ route('consul.store') }}" method="POST">
+            @csrf
 
-            <div class="info-list">
-                <div class="info-item">
-                    <div class="info-bullet">1</div>
-                    <div>
-                        <p class="info-title">Pilih Product Group</p>
-                        <p class="info-text">PG untuk Printing Group dan DSG untuk Personal Systems Group. Ini membantu pengelompokan konsultasi sejak awal.</p>
-                    </div>
+            <div class="form-grid">
+                <div class="form-group full">
+                    <label class="form-label" for="subject">Judul Konsultasi <span class="required">*</span></label>
+                    <input type="text" id="subject" name="subject" class="form-control" value="{{ old('subject') }}" placeholder="Contoh: Laptop tidak mau menyala">
+                    <div class="hint">Buat judul singkat dan jelas supaya CM cepat paham inti masalah.</div>
+                    @error('subject')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div class="info-item">
-                    <div class="info-bullet">2</div>
-                    <div>
-                        <p class="info-title">Pilih Kategori Masalah</p>
-                        <p class="info-text">Gunakan kategori yang paling mendekati gejala awal. Kalau tidak cocok, pilih <b>Lainnya</b>.</p>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="product_group">Product Group <span class="required">*</span></label>
+                    <select id="product_group" name="product_group" class="form-select">
+                        <option value="">Pilih product group</option>
+                        <option value="PSG" {{ old('product_group') == 'PSG' ? 'selected' : '' }}>PSG - Personal Systems Group</option>
+                        <option value="IPG" {{ old('product_group') == 'IPG' ? 'selected' : '' }}>IPG - Imaging & Printing Group</option>
+                    </select>
+                    <div class="hint">Pilih group sesuai kategori produk yang bermasalah.</div>
+                    @error('product_group')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div class="info-item">
-                    <div class="info-bullet">3</div>
-                    <div>
-                        <p class="info-title">Jelaskan Masalah Singkat</p>
-                        <p class="info-text">Tulis gejala utama, kapan mulai bermasalah, dan kondisi unit saat ini. Jangan terlalu detail dulu, ini masih konsultasi awal.</p>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="category">Kategori Masalah <span class="required">*</span></label>
+                    <select id="category" name="category" class="form-select">
+                        <option value="">Pilih kategori</option>
+                        <option value="hardware" {{ old('category') == 'hardware' ? 'selected' : '' }}>Hardware</option>
+                        <option value="software" {{ old('category') == 'software' ? 'selected' : '' }}>Software / Driver</option>
+                        <option value="network" {{ old('category') == 'network' ? 'selected' : '' }}>Network</option>
+                        <option value="consumable" {{ old('category') == 'consumable' ? 'selected' : '' }}>Consumable / Supply</option>
+                        <option value="other" {{ old('category') == 'other' ? 'selected' : '' }}>Lainnya</option>
+                    </select>
+                    <div class="hint">Kalau pilih <b>Lainnya</b>, jelaskan di deskripsi masalah.</div>
+                    @error('category')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
 
-                <div class="info-item">
-                    <div class="info-bullet">4</div>
-                    <div>
-                        <p class="info-title">Lanjut ke Chat</p>
-                        <p class="info-text">Setelah form disimpan, sistem bisa lanjut ke sesi konsultasi untuk screening lebih jauh sebelum dibuat case resmi.</p>
-                    </div>
+                <div class="form-group">
+                    <label class="form-label" for="brand_model">Brand / Model</label>
+                    <input type="text" id="brand_model" name="brand_model" class="form-control" value="{{ old('brand_model') }}" placeholder="Contoh: Epson L3210">
+                    <div class="hint">Opsional, tapi sangat membantu untuk screening awal.</div>
+                    @error('brand_model')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+
+                <div class="form-group full">
+                    <label class="form-label" for="description">Deskripsi Masalah <span class="required">*</span></label>
+                    <textarea id="description" name="description" class="form-textarea" placeholder="Ceritakan gejala, kronologi, dan kondisi unit secara singkat..."><?php echo e(old('description')); ?></textarea>
+                    <div class="hint">Kalau pilih kategori <b>Lainnya</b>, bagian ini wajib menjelaskan masalahnya.</div>
+                    @error('description')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
                 </div>
             </div>
 
-            <div class="divider"></div>
-
-            <div class="subgroup-box">
-                <p class="subgroup-title">Contoh Kategori Printer</p>
-                <p class="subgroup-text">
-                    Hardware, Software / Driver, Consumable / Supply, dan Lainnya.
-                    Kalau pilih <b>Lainnya</b>, jelaskan masalah pada kolom deskripsi.
-                </p>
+            <div class="action-row">
+                <a href="{{ route('cust.home') }}" class="btn-secondary-soft">Cancel</a>
+                
+ <button type="submit" class="btn-primary-soft">
+        Start Konsultasi
+    </button>
+    
             </div>
+        </form>
+    </div>
 
-            <div class="mini-summary">
-                <h5>Ringkasan Flow</h5>
-                <ul>
-                    <li>Customer isi form konsultasi.</li>
-                    <li>Sistem membuat sesi konsultasi.</li>
-                    <li>CM membaca masalah awal.</li>
-                    <li>Jika perlu, konsultasi dilanjutkan ke chat.</li>
-                    <li>Jika tidak cukup, baru diproses ke case service.</li>
-                </ul>
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="info-bullet">1</div>
+            <div>
+                <p class="info-title">Pilih Product Group</p>
+                <p class="info-text">PSG untuk Personal Systems Group dan IPG untuk Imaging & Printing Group.</p>
             </div>
-        </div> -->
+        </div>
+
+        <div class="info-item">
+            <div class="info-bullet">2</div>
+            <div>
+                <p class="info-title">Pilih Kategori Masalah</p>
+                <p class="info-text">Gunakan kategori yang paling dekat dengan gejala awal. Jika tidak cocok, pilih Lainnya.</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-bullet">3</div>
+            <div>
+                <p class="info-title">Jelaskan Masalah Singkat</p>
+                <p class="info-text">Cukup jelaskan gejala utama, kronologi singkat, dan kondisi unit saat ini.</p>
+            </div>
+        </div>
+
+        <div class="info-item">
+            <div class="info-bullet">4</div>
+            <div>
+                <p class="info-title">Lanjut ke Chat</p>
+                <p class="info-text">Setelah form disimpan, sistem membuat sesi konsultasi dan masuk ke konsultasi aktif.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mini-summary">
+        <h5>Ringkasan Flow</h5>
+        <ul>
+            <li>Customer isi form konsultasi.</li>
+            <li>Sistem membuat sesi konsultasi.</li>
+            <li>CM membaca masalah awal.</li>
+            <li>Jika perlu, konsultasi dilanjutkan ke chat.</li>
+            <li>Jika tidak cukup, baru diproses ke case service.</li>
+        </ul>
     </div>
 </div>
 @endsection

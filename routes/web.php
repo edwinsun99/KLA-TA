@@ -60,6 +60,7 @@ use App\Http\Controllers\customer\TrackCaseController;
 use App\Http\Controllers\customer\ServiceLocationController;
 use App\Http\Controllers\customer\HomeController as CustHomeController;
 use App\Http\Controllers\customer\NewconsulController;
+use App\Http\Controllers\customer\DetailConsController;
 use App\Http\Controllers\customer\CaseController;
 use App\Http\Controllers\customer\NotificationController;
 
@@ -113,6 +114,9 @@ Route::prefix('customer')->group(function () {
     Route::get('/consultation/active', [NewconsulController::class, 'active'])->name('consul.act');
     Route::post('/consultation/send', [NewconsulController::class, 'store'])->name('consul.store');
     Route::get('/consultation/history', [NewconsulController::class, 'history'])->name('consul.hst');
+
+    // Detail Konsul
+    Route::get('/consultation/detail/{id}', [DetailConsController::class, 'show'])->name('consul.detail');
 
     // My Cases
     Route::get('/cases', [CaseController::class, 'index'])->name('my.cases');
