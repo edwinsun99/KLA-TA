@@ -27,4 +27,10 @@ class Consultations extends Model
     {
         return $this->belongsTo(User::class, 'customer_id');
     }
+
+    public function messages()
+{
+    return $this->hasMany(Message::class);
+}
+
 }

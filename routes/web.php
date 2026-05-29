@@ -64,6 +64,10 @@ use App\Http\Controllers\customer\DetailConsController;
 use App\Http\Controllers\customer\CaseController;
 use App\Http\Controllers\customer\NotificationController;
 
+// live chat
+use App\Http\Controllers\livechat\ChatController;
+use App\Http\Controllers\livechat\CsController;
+
 // OTHER CONTROLLERS
 use App\Http\Controllers\MasterController;
 use App\Http\Controllers\Auth\LoginController;
@@ -124,6 +128,26 @@ Route::prefix('customer')->group(function () {
     // Notifikasi
     Route::get('/notifications', [NotificationController::class, 'index'])->name('cust.notif');
 
+});
+
+// ===========================
+// 🔹 LIVECHAT ROUTES
+// ===========================
+
+// Customer - Live Chat
+Route::middleware('auth')->group(function () {
+    Route::get('/chat/{consultation}/messages', [ChatController::class, 'getMessages']);
+    Route::post('/chat/{consultation}/send', [ChatController::class, 'sendMessage']);
+    Route::post('/chat/{consultation}/request-cs', [ChatController::class, 'requestCs']);
+});
+
+// CS - Live Chat
+Route::middleware('auth')->group(function () {
+    Route::get('/cs/chats', [CsController::class, 'index']);
+    Route::post('/cs/chat/{consultation}/join', [CsController::class, 'joinChat']);
+    Route::post('/cs/chat/{consultation}/send', [CsController::class, 'sendMessage']);
+    Route::post('/cs/chat/{consultation}/close', [CsController::class, 'closeChat']);
+    Route::post('/cs/chat/{consultation}/escalate', [CsController::class, 'escalateToKla']);
 });
 
 // ===========================
