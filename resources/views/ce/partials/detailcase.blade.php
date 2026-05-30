@@ -18,40 +18,37 @@
     .info-value { font-size: 1rem; font-weight: 500; color: #2d3436; }
     
     .section-title { 
-        color: #6f42c1; /* Ungu */
+        color: #6f42c1;
         font-weight: 700; 
-        border-left: 4px solid #ffc107; /* Kuning */
+        border-left: 4px solid #ffc107;
         padding-left: 12px;
         margin-bottom: 20px;
     }
 
-    /* Styling Dropdown agar Modern */
-.form-select-lg {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236f42c1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 16px 12px;
-    border-radius: 12px !important;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
+    .form-select-lg {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236f42c1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
+        border-radius: 12px !important;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
 
-.form-select-lg:hover {
-    border-color: #6f42c1;
-    background-color: rgba(111, 66, 193, 0.05);
-}
+    .form-select-lg:hover {
+        border-color: #6f42c1;
+        background-color: rgba(111, 66, 193, 0.05);
+    }
 
-/* Styling isi dropdown (untuk browser modern) */
-select option {
-    background-color: #ffffff;
-    color: #333;
-    padding: 12px;
-    font-size: 1rem;
-}
+    select option {
+        background-color: #ffffff;
+        color: #333;
+        padding: 12px;
+        font-size: 1rem;
+    }
 
-    /* Custom Form Styling */
     .form-control, .form-select {
         border-radius: 10px;
         border: 1px solid #dee2e6;
@@ -76,13 +73,45 @@ select option {
     .btn-save-all:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(111, 66, 193, 0.4);
-        color: #ffc107; /* Teks berubah kuning saat hover */
+        color: #ffc107;
     }
 
     .badge-custom {
         padding: 8px 14px;
         border-radius: 8px;
         font-weight: 600;
+    }
+
+    /* === SEND TO WA BUTTON === */
+    .btn-wa {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-wa:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        color: white;
+    }
+
+    .wa-wrapper {
+        animation: fadeInDown 0.3s ease;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
     }
 </style>
 
@@ -97,19 +126,18 @@ select option {
                     <div class="col-6"><p class="info-label mb-0">Received Date</p><p class="info-value">{{ $case->received_date }}</p></div>
                     <div class="col-12"><p class="info-label mb-0">Fault Description</p><p class="info-value">{{ $case->fault_description }}</p></div>
                     <div class="col-12"><p class="info-label mb-0">Unit Condition</p><p class="info-value">{{ $case->kondisi_unit }}</p></div>
-<div class="col-6">
-    <p class="info-label mb-0">Started Date</p>
-    <p class="info-value text-primary">
-        {{ $case->started_date ? \Carbon\Carbon::parse($case->started_date)->format('Y-m-d') : '-' }}
-    </p>
-</div>
-
-<div class="col-6">
-    <p class="info-label mb-0">Finished Date</p>
-    <p class="info-value text-success">
-        {{ $case->finished_date ? \Carbon\Carbon::parse($case->finished_date)->format('Y-m-d') : '-' }}
-    </p>
-</div>
+                    <div class="col-6">
+                        <p class="info-label mb-0">Started Date</p>
+                        <p class="info-value text-primary">
+                            {{ $case->started_date ? \Carbon\Carbon::parse($case->started_date)->format('Y-m-d') : '-' }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="info-label mb-0">Finished Date</p>
+                        <p class="info-value text-success">
+                            {{ $case->finished_date ? \Carbon\Carbon::parse($case->finished_date)->format('Y-m-d') : '-' }}
+                        </p>
+                    </div>
                     <div class="col-12"><p class="info-label mb-0">Repair Summary</p><p class="info-value">{{ $case->repair_summary ?? 'No summary yet' }}</p></div>
                 </div>
             </div>
@@ -141,7 +169,7 @@ select option {
             <div class="glass-card p-4 border-top border-4 border-primary">
                 <h5 class="section-title"><i class="fas fa-sync-alt me-2"></i>Update Progress</h5>
                 
-                <div class="row align-items-center mb-4">
+                <div class="row align-items-center mb-3">
                     <div class="col-md-4">
                         <label class="info-label d-block mb-1">Current Status</label>
                         <span class="badge-custom bg-info text-white text-uppercase" style="font-size: 0.9rem;">
@@ -150,7 +178,7 @@ select option {
                     </div>
                     <div class="col-md-8">
                         <label class="form-label info-label">Change Status to *</label>
-                        <select name="status" class="form-select shadow-sm" required>
+                        <select name="status" id="statusSelect" class="form-select shadow-sm" required>
                             @php
                                 $opsi = ['repair progress', 'quotation request', 'cancel repair', 'finish repair', 'close repair'];
                             @endphp
@@ -162,6 +190,23 @@ select option {
                         </select>
                     </div>
                 </div>
+
+                {{-- ===================== SEND TO WA BUTTON ===================== --}}
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <div id="waBtnWrapper" class="wa-wrapper" style="display:none;">
+                            <a id="waLink" href="#" target="_blank" class="btn-wa w-100">
+                                <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i>
+                                SEND TO WA — Notify Customer
+                            </a>
+                            <p class="text-muted mt-1 mb-0" style="font-size:0.78rem; text-align:center;">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Klik untuk kirim notifikasi ke customer bahwa perangkatnya sedang dalam perbaikan.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {{-- ============================================================ --}}
 
                 <div class="mb-4">
                     <label class="form-label info-label">Add Log Note <span class="text-lowercase fw-normal">(Opsional)</span></label>
@@ -219,3 +264,48 @@ select option {
         </div>
     </div>
 </div>
+
+<script>
+    const statusSelect  = document.getElementById('statusSelect');
+    const waBtnWrapper  = document.getElementById('waBtnWrapper');
+    const waLink        = document.getElementById('waLink');
+
+    // Data dari Laravel (PHP → JS)
+    const rawPhone      = "{{ preg_replace('/[^0-9]/', '', $service->phone_number ?? '') }}";
+    const customerName  = "{{ addslashes($service->customer_name ?? '') }}";
+    const cofId         = "{{ $service->cof_id ?? '' }}";
+    // const brand         = "{{ addslashes($service->brand ?? '') }}";
+    const serialNumber  = "{{ addslashes($service->serial_number ?? '') }}";
+    const productNumber = "{{ addslashes($service->product_number ?? '') }}";    
+    const namaType      = "{{ addslashes($service->nama_type ?? '') }}";
+
+    function buildWaUrl() {
+        // Normalise nomor: 08xx → 628xx
+        const number = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
+
+const pesan = 
+    `Halo ${customerName} 👋\n\n` +
+    `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak sedang dalam proses perbaikan. Berikut detailnya:\n\n` +
+    `📱 *Unit* : ${namaType}\n` +
+    `🔖 *COF ID* : ${cofId}\n` +
+    `🔢 *S/N* : ${serialNumber}\n` +
+    `🔢 *P/N* : ${productNumber}\n\n` +
+    `🔧 Status saat ini: *Repair Progress*\n\n` +
+    `Kami akan segera menghubungi kakak jika ada perkembangan lebih lanjut.\n\n` +
+    `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+
+        return `https://wa.me/${number}?text=${encodeURIComponent(pesan)}`;
+    }
+
+    function toggleWaBtn() {
+        if (statusSelect.value === 'repair progress') {
+            waLink.href = buildWaUrl();
+            waBtnWrapper.style.display = 'block';
+        } else {
+            waBtnWrapper.style.display = 'none';
+        }
+    }
+
+    statusSelect.addEventListener('change', toggleWaBtn);
+    toggleWaBtn(); // cek saat halaman pertama kali load
+</script>
