@@ -45,11 +45,12 @@ use App\Http\Controllers\ce\ErfController as CeErfController;
 use App\Http\Controllers\ce\FinishController as CeFinishController;
 use App\Http\Controllers\ce\ProfileController as CeProfileController;
 
-// CE CONTROLLERS
+// CS CONTROLLERS
 use App\Http\Controllers\cs\ServiceController as CsServiceController;
 use App\Http\Controllers\cs\HomeController as CsHomeController;
 use App\Http\Controllers\cs\CaseController as CsCaseController;
 use App\Http\Controllers\cs\DetailController as CsDetailController;
+use App\Http\Controllers\cs\NewCaseController as CsNewCaseController;
 use App\Http\Controllers\cs\ProductController as CsProductController;
 use App\Http\Controllers\cs\ErfController as CsErfController;
 use App\Http\Controllers\cs\FinishController as CsFinishController;
@@ -329,7 +330,7 @@ Route::prefix('cm')->name('cm.')->group(function () {
     // })->name('home');
 
     Route::get('/ce/services', [CeServiceController::class, 'index'])->name('ce.services.index');
-    Route::post('/ce/services', [CeServiceControlller::class, 'store'])->name('ce.services.store');
+    Route::post('/ce/services', [CeServiceController::class, 'store'])->name('ce.services.store');
 
     Route::get('/ce/case', [CeCaseController::class, 'index'])->name('ce.case.index');
     Route::get('/ce/case/logdate', [CeCaseController::class, 'logdate'])->name('ce.case.logdate');
@@ -445,8 +446,12 @@ Route::group([], function () {
     Route::get('/cs/case/logdate', [CsCaseController::class, 'logdate'])->name('cs.case.logdate');
     Route::get('/cs/finish/logdate', [CsFinishController::class, 'logdate'])->name('cs.finish.logdate');
 
-    Route::get('/cs/cases/new', fn() => view('cs.newcase'))->name('cs.cases.new');
+    // Route::get('/cs/cases/new', fn() => view('cs.newcase'))->name('cs.cases.new');
+    // ✅ FIX — arahkan ke NewCaseController@index yang sudah ada $branches-nya
+    Route::get('/cs/cases/new', [CsNewCaseController::class, 'index'])->name('cs.cases.new');
     Route::get('/cs/newcase', [CsCaseController::class, 'create'])->name('cs.newcase');
+    // Tambahkan di dalam route group CS kamu
+    Route::get('/get-ces-by-branch', [CsServiceController::class, 'getCesByBranch'])->name('cs.getCesByBranch');  
 
 
     Route::get('/cs/case/{id}', [CsDetailController::class, 'show'])->name('cs.case.show');

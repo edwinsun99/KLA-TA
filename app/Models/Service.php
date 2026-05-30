@@ -15,6 +15,7 @@ class Service extends Model
         'finished_date',
         'contact', 
         'branch_id',
+        'ce_id',          // ✅ TAMBAH INI
         'customer_name',    
         'email', 
         'phone_number',
@@ -40,6 +41,12 @@ class Service extends Model
 {
     return $this->belongsTo(\App\Models\Branches::class, 'branch_id');
 }
+
+    // ✅ Relasi ke CE (User yang di-assign)
+    public function ce()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'ce_id');
+    }
 
     public function scopeForCurrentBranch($query)
 {

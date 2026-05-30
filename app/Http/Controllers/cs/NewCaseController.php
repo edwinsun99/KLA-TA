@@ -4,13 +4,15 @@ namespace App\Http\Controllers\cs;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller; // WAJIB ada ini
 use App\Models\Product;
+use App\Models\Branches;
 use App\Models\Service;
 
 class NewCaseController extends Controller
 {
     public function index()
     {
-        return view('cs.newcase'); // file: resources/views/newcase.blade.php
+            $branches = Branches::orderBy('name')->get(); // ← tambah ini
+        return view('cs.newcase', compact ('branches')); // file: resources/views/newcase.blade.php
     }
 
     public function getNamaType($pn)

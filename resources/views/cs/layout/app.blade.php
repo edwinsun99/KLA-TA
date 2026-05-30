@@ -153,7 +153,7 @@
         </div>
 
         <div class="header-right">
-            <a href="{{ route('cases.new') }}" class="text-decoration-none">
+            <a href="{{ route('cs.cases.new') }}" class="text-decoration-none">
                 <button style="background: var(--secondary-orange); color: white; border: none; padding: 8px 18px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 8px; transition: 0.3s;">
                     <i class="bi bi-plus-lg"></i>
                     <span>Create</span>
