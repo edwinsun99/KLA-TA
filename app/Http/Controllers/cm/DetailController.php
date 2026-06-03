@@ -59,7 +59,62 @@ public function status($id)
     return view('cm.partials.detailcase', compact('service'));
 }
 
+public function sendToWhatsapp($id)
+{
+    $service = Service::findOrFail($id);
 
+    $customerName = $service->customer_name ?? '-';
+    $namaType = $service->nama_type ?? '-';
+    $cofId = $service->cof_id ?? '-';
+    $serialNumber = $service->serial_number ?? '-';
+    $productNumber = $service->product_number ?? '-';
+
+    $rawPhone = preg_replace('/[^0-9]/', '', $service->phone_number ?? '');
+    $rawPhone = ltrim($rawPhone, '0');
+    $phone = str_starts_with($rawPhone, '62') ? $rawPhone : '62' . $rawPhone;
+
+    // Ambil lognote terakhir dari CE
+    $note = \DB::table('lognote')
+        ->where('cof_id', $service->cof_id)
+        ->where('logdesc', 'like', '%Part Number%')
+        ->orderByDesc('created_at')
+        ->first();
+
+    $partNumber = '-';
+    $partName = '-';
+
+    if ($note && !empty($note->logdesc)) {
+        $logdesc = $note->logdesc;
+
+        if (preg_match('/Part Number:\s*(.+?)(?:\n|$)/i', $logdesc, $matchPN)) {
+            $partNumber = trim($matchPN[1]);
+        }
+
+        if (preg_match('/Part Name:\s*(.+?)(?:\n|$)/i', $logdesc, $matchPart)) {
+            $partName = trim($matchPart[1]);
+        }
+    }
+
+    $pesan =
+        "Halo {$customerName} 👋\n\n" .
+        "Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak telah dicek dan ditemukan part yang rusak sehingga perlu penggantian sparepart baru.\n\n" .
+        "📱 *Unit* : {$namaType}\n" .
+        "🔖 *COF ID* : {$cofId}\n" .
+        "🔢 *S/N* : {$serialNumber}\n" .
+        "🔢 *P/N* : {$productNumber}\n\n" .
+
+        "🔧 Status saat ini: *Quotation Request*\n\n" .
+
+        "Detail sparepart yang perlu diganti:\n" .
+        "• *Part Number* : {$partNumber}\n" .
+        "• *Part Name* : {$partName}\n\n" .
+        "Mohon konfirmasi terkait pengajuan sparepart agar proses perbaikan dapat dilanjutkan.\n\n" .
+        "Terima kasih telah mempercayakan unit kakak kepada kami 🙏";
+
+    $url = "https://wa.me/{$phone}?text=" . urlencode($pesan);
+
+    return redirect()->away($url);
+}
 
     public function previewPdf($id)
     {

@@ -274,6 +274,8 @@ Route::prefix('cm')->name('cm.')->group(function () {
 
     // CASE
     Route::get('/case', [CmCaseController::class, 'index'])->name('case.index');
+    Route::get('/repair/{id}/send-wa', [CmDetailController::class, 'sendToWhatsapp'])
+    ->name('reqpart.sendwa');
     Route::get('/case/{id}', [CmDetailController::class, 'show'])->name('case.show');
 
     // SEARCH

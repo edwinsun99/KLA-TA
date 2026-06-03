@@ -84,6 +84,38 @@ select option {
         border-radius: 8px;
         font-weight: 600;
     }
+
+     /* === SEND TO WA BUTTON === */
+    .btn-wa {
+        background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+        border: none;
+        color: white;
+        padding: 12px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-wa:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4);
+        color: white;
+    }
+
+    .wa-wrapper {
+        animation: fadeInDown 0.3s ease;
+    }
+
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 </style>
 
 <div class="container-fluid py-4">
@@ -150,8 +182,7 @@ select option {
                     </div>
                     <div class="col-md-8">
                         <label class="form-label info-label">Change Status to *</label>
-                        <select name="status" class="form-select shadow-sm" required>
-                            @php
+                            <select name="status" id="statusSelect" class="form-select shadow-sm" required>                            @php
                                 $opsi = ['quotation approved', 'quotation cancelled'];
                             @endphp
                             @foreach ($opsi as $st)
@@ -162,6 +193,21 @@ select option {
                         </select>
                     </div>
                 </div>
+
+   {{-- ===================== SEND TO WA BUTTON ===================== --}}
+<div class="row mb-3">
+    <div class="col-12">
+        <a href="{{ route('cm.reqpart.sendwa', $service->id) }}" class="btn btn-success w-100">
+            <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i>
+            SEND TO WA — Notify Customer
+        </a>
+        <p class="text-muted mt-1 mb-0" style="font-size:0.78rem; text-align:center;">
+            <i class="fas fa-info-circle me-1"></i>
+            Klik untuk kirim notifikasi ke customer bahwa unit membutuhkan penggantian sparepart.
+        </p>
+    </div>
+</div>
+{{-- ============================================================ --}}
 
                 <div class="mb-4">
                     <label class="form-label info-label">Add Log Note <span class="text-lowercase fw-normal">(Opsional)</span></label>
@@ -219,3 +265,53 @@ select option {
         </div>
     </div>
 </div>
+
+<script>
+    const statusSelect  = document.getElementById('statusSelect');
+    const waBtnWrapper  = document.getElementById('waBtnWrapper');
+    const waLink        = document.getElementById('waLink');
+
+    // Data dari Laravel (PHP → JS)
+    const rawPhone      = "{{ preg_replace('/[^0-9]/', '', $service->phone_number ?? '') }}";
+    const customerName  = "{{ addslashes($service->customer_name ?? '') }}";
+    const cofId         = "{{ $service->cof_id ?? '' }}";
+    // const brand         = "{{ addslashes($service->brand ?? '') }}";
+    const serialNumber  = "{{ addslashes($service->serial_number ?? '') }}";
+    const productNumber = "{{ addslashes($service->product_number ?? '') }}";    
+    const namaType      = "{{ addslashes($service->nama_type ?? '') }}";
+
+    function buildWaUrl() {
+        // Normalise nomor: 08xx → 628xx
+        const number = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
+
+const pesan =
+    `Halo ${customerName} 👋\n\n` +
+    `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak telah dicek dan ditemukan part yang rusak sehingga perlu penggantian sparepart baru. Berikut detail unit kakak:\n\n` +
+    `📱 *Unit* : ${namaType}\n` +
+    `🔖 *COF ID* : ${cofId}\n` +
+    `🔢 *S/N* : ${serialNumber}\n\n` +
+    `🔢 *P/N* : ${productNumber}\n\n` +
+
+    `🔧 Status saat ini: *Quotation Request*\n\n` +
+
+    `Detail sparepart yang perlu diganti:\n` +
+    `• *Part Number* : ${partNumber}\n` +
+    `• *Part Name* : ${partName}\n\n` +
+    `Mohon konfirmasi terkait pengajuan sparepart agar proses perbaikan dapat dilanjutkan.\n\n` +
+    `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+
+        return `https://wa.me/${number}?text=${encodeURIComponent(pesan)}`;
+    }
+
+    function toggleWaBtn() {
+        if (statusSelect.value === 'quotation approved') {
+            waLink.href = buildWaUrl();
+            waBtnWrapper.style.display = 'block';
+        } else {
+            waBtnWrapper.style.display = 'none';
+        }
+    }
+
+    statusSelect.addEventListener('change', toggleWaBtn);
+    toggleWaBtn(); // cek saat halaman pertama kali load
+</script>
