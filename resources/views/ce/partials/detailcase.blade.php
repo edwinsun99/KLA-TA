@@ -270,36 +270,71 @@
     const waBtnWrapper  = document.getElementById('waBtnWrapper');
     const waLink        = document.getElementById('waLink');
 
-    // Data dari Laravel (PHP → JS)
+    const currentStatus = "{{ strtolower($service->status ?? '') }}";
+
     const rawPhone      = "{{ preg_replace('/[^0-9]/', '', $service->phone_number ?? '') }}";
     const customerName  = "{{ addslashes($service->customer_name ?? '') }}";
     const cofId         = "{{ $service->cof_id ?? '' }}";
-    // const brand         = "{{ addslashes($service->brand ?? '') }}";
     const serialNumber  = "{{ addslashes($service->serial_number ?? '') }}";
     const productNumber = "{{ addslashes($service->product_number ?? '') }}";    
     const namaType      = "{{ addslashes($service->nama_type ?? '') }}";
 
-    function buildWaUrl() {
-        // Normalise nomor: 08xx → 628xx
+    function buildWaUrl(dropdownVal) {
         const number = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
 
-const pesan = 
-    `Halo ${customerName} 👋\n\n` +
-    `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak sedang dalam proses perbaikan. Berikut detailnya:\n\n` +
-    `📱 *Unit* : ${namaType}\n` +
-    `🔖 *COF ID* : ${cofId}\n` +
-    `🔢 *S/N* : ${serialNumber}\n` +
-    `🔢 *P/N* : ${productNumber}\n\n` +
-    `🔧 Status saat ini: *Repair Progress*\n\n` +
-    `Kami akan segera menghubungi kakak jika ada perkembangan lebih lanjut.\n\n` +
-    `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+        let pesan = '';
+
+        if (dropdownVal === 'finish repair') {
+            // Template: unit selesai diperbaiki, siap diambil
+            pesan =
+                `Halo ${customerName} 👋\n\n` +
+                `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak telah *selesai diperbaiki* dan siap untuk diambil. Berikut detailnya:\n\n` +
+                `📱 *Unit* : ${namaType}\n` +
+                `🔖 *COF ID* : ${cofId}\n` +
+                `🔢 *S/N* : ${serialNumber}\n` +
+                `🔢 *P/N* : ${productNumber}\n\n` +
+                `✅ *Unit sudah selesai & siap diambil*\n` +
+                `🔧 Status saat ini: *Finish Repair*\n\n` +
+                `Silakan datang ke service center kami untuk mengambil unit kakak.\n\n` +
+                `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+
+        } else if (dropdownVal === 'repair progress' && currentStatus === 'quotation approved') {
+            // Template: part datang, siap dipasang
+            pesan =
+                `Halo ${customerName} 👋\n\n` +
+                `Kami dari *KLA Service Center* ingin menginformasikan bahwa sparepart untuk unit kakak telah *tiba* dan siap untuk dipasang. Proses perbaikan akan segera dilanjutkan. Berikut detailnya:\n\n` +
+                `📱 *Unit* : ${namaType}\n` +
+                `🔖 *COF ID* : ${cofId}\n` +
+                `🔢 *S/N* : ${serialNumber}\n` +
+                `🔢 *P/N* : ${productNumber}\n\n` +
+                `✅ *Sparepart sudah tersedia & siap dipasang*\n` +
+                `🔧 Status saat ini: *Repair Progress*\n\n` +
+                `Kami akan segera menghubungi kakak kembali setelah perbaikan selesai.\n\n` +
+                `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+
+        } else {
+            // Template default: unit baru masuk proses repair
+            pesan =
+                `Halo ${customerName} 👋\n\n` +
+                `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak sedang dalam proses perbaikan. Berikut detailnya:\n\n` +
+                `📱 *Unit* : ${namaType}\n` +
+                `🔖 *COF ID* : ${cofId}\n` +
+                `🔢 *S/N* : ${serialNumber}\n` +
+                `🔢 *P/N* : ${productNumber}\n\n` +
+                `🔧 Status saat ini: *Repair Progress*\n\n` +
+                `Kami akan segera menghubungi kakak jika ada perkembangan lebih lanjut.\n\n` +
+                `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+        }
 
         return `https://wa.me/${number}?text=${encodeURIComponent(pesan)}`;
     }
 
     function toggleWaBtn() {
-        if (statusSelect.value === 'repair progress') {
-            waLink.href = buildWaUrl();
+        const dropdownVal = statusSelect.value.toLowerCase();
+
+        // Tombol WA muncul saat dropdown = "repair progress" atau "finish repair"
+        if (dropdownVal === 'repair progress' || dropdownVal === 'finish repair') {
+            waLink.href = buildWaUrl(dropdownVal);
             waBtnWrapper.style.display = 'block';
         } else {
             waBtnWrapper.style.display = 'none';
@@ -307,5 +342,5 @@ const pesan =
     }
 
     statusSelect.addEventListener('change', toggleWaBtn);
-    toggleWaBtn(); // cek saat halaman pertama kali load
+    toggleWaBtn();
 </script>

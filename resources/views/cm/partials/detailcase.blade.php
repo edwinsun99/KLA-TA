@@ -4,7 +4,6 @@
 <style>
     body { font-family: 'Inter', sans-serif; background-color: #f8f9fa; color: #333; }
     
-    /* Glassmorphism Card Style */
     .glass-card {
         background: rgba(255, 255, 255, 0.7);
         backdrop-filter: blur(15px);
@@ -18,40 +17,37 @@
     .info-value { font-size: 1rem; font-weight: 500; color: #2d3436; }
     
     .section-title { 
-        color: #6f42c1; /* Ungu */
+        color: #6f42c1;
         font-weight: 700; 
-        border-left: 4px solid #ffc107; /* Kuning */
+        border-left: 4px solid #ffc107;
         padding-left: 12px;
         margin-bottom: 20px;
     }
 
-    /* Styling Dropdown agar Modern */
-.form-select-lg {
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236f42c1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 16px 12px;
-    border-radius: 12px !important;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
-}
+    .form-select-lg {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%236f42c1' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px 12px;
+        border-radius: 12px !important;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
 
-.form-select-lg:hover {
-    border-color: #6f42c1;
-    background-color: rgba(111, 66, 193, 0.05);
-}
+    .form-select-lg:hover {
+        border-color: #6f42c1;
+        background-color: rgba(111, 66, 193, 0.05);
+    }
 
-/* Styling isi dropdown (untuk browser modern) */
-select option {
-    background-color: #ffffff;
-    color: #333;
-    padding: 12px;
-    font-size: 1rem;
-}
+    select option {
+        background-color: #ffffff;
+        color: #333;
+        padding: 12px;
+        font-size: 1rem;
+    }
 
-    /* Custom Form Styling */
     .form-control, .form-select {
         border-radius: 10px;
         border: 1px solid #dee2e6;
@@ -76,7 +72,7 @@ select option {
     .btn-save-all:hover {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(111, 66, 193, 0.4);
-        color: #ffc107; /* Teks berubah kuning saat hover */
+        color: #ffc107;
     }
 
     .badge-custom {
@@ -85,7 +81,6 @@ select option {
         font-weight: 600;
     }
 
-     /* === SEND TO WA BUTTON === */
     .btn-wa {
         background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
         border: none;
@@ -129,19 +124,18 @@ select option {
                     <div class="col-6"><p class="info-label mb-0">Received Date</p><p class="info-value">{{ $case->received_date }}</p></div>
                     <div class="col-12"><p class="info-label mb-0">Fault Description</p><p class="info-value">{{ $case->fault_description }}</p></div>
                     <div class="col-12"><p class="info-label mb-0">Unit Condition</p><p class="info-value">{{ $case->kondisi_unit }}</p></div>
-<div class="col-6">
-    <p class="info-label mb-0">Started Date</p>
-    <p class="info-value text-primary">
-        {{ $case->started_date ? \Carbon\Carbon::parse($case->started_date)->format('Y-m-d') : '-' }}
-    </p>
-</div>
-
-<div class="col-6">
-    <p class="info-label mb-0">Finished Date</p>
-    <p class="info-value text-success">
-        {{ $case->finished_date ? \Carbon\Carbon::parse($case->finished_date)->format('Y-m-d') : '-' }}
-    </p>
-</div>
+                    <div class="col-6">
+                        <p class="info-label mb-0">Started Date</p>
+                        <p class="info-value text-primary">
+                            {{ $case->started_date ? \Carbon\Carbon::parse($case->started_date)->format('Y-m-d') : '-' }}
+                        </p>
+                    </div>
+                    <div class="col-6">
+                        <p class="info-label mb-0">Finished Date</p>
+                        <p class="info-value text-success">
+                            {{ $case->finished_date ? \Carbon\Carbon::parse($case->finished_date)->format('Y-m-d') : '-' }}
+                        </p>
+                    </div>
                     <div class="col-12"><p class="info-label mb-0">Repair Summary</p><p class="info-value">{{ $case->repair_summary ?? 'No summary yet' }}</p></div>
                 </div>
             </div>
@@ -182,8 +176,9 @@ select option {
                     </div>
                     <div class="col-md-8">
                         <label class="form-label info-label">Change Status to *</label>
-                            <select name="status" id="statusSelect" class="form-select shadow-sm" required>                            @php
-                                $opsi = ['quotation approved', 'quotation cancelled'];
+                        <select name="status" id="statusSelect" class="form-select shadow-sm" required>
+                            @php
+                                $opsi = ['quotation request', 'quotation approved', 'quotation cancelled'];
                             @endphp
                             @foreach ($opsi as $st)
                                 <option value="{{ $st }}" {{ $service->status == $st ? 'selected' : '' }}>
@@ -194,20 +189,26 @@ select option {
                     </div>
                 </div>
 
-   {{-- ===================== SEND TO WA BUTTON ===================== --}}
-<div class="row mb-3">
-    <div class="col-12">
-        <a href="{{ route('cm.reqpart.sendwa', $service->id) }}" class="btn btn-success w-100">
-            <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i>
-            SEND TO WA — Notify Customer
-        </a>
-        <p class="text-muted mt-1 mb-0" style="font-size:0.78rem; text-align:center;">
-            <i class="fas fa-info-circle me-1"></i>
-            Klik untuk kirim notifikasi ke customer bahwa unit membutuhkan penggantian sparepart.
-        </p>
-    </div>
-</div>
-{{-- ============================================================ --}}
+                {{-- ===================== SEND TO WA BUTTON ===================== --}}
+                {{-- 
+                    FIX: 
+                    1. Tambah id="waBtnWrapper" → supaya JS bisa hide/show
+                    2. Tambah id="waLink" → supaya JS bisa set href dynamically
+                    3. style="display:none" → hidden by default, JS yang kontrol
+                --}}
+                <div class="row mb-3" id="waBtnWrapper" style="display: none;">
+                    <div class="col-12 wa-wrapper">
+                        <a href="#" id="waLink" class="btn-wa w-100" target="_blank">
+                            <i class="fab fa-whatsapp" style="font-size:1.2rem;"></i>
+                            SEND TO WA — Notify Customer
+                        </a>
+                        <p class="text-muted mt-1 mb-0" style="font-size:0.78rem; text-align:center;">
+                            <i class="fas fa-info-circle me-1"></i>
+                            Klik untuk kirim notifikasi ke customer bahwa unit membutuhkan penggantian sparepart.
+                        </p>
+                    </div>
+                </div>
+                {{-- ============================================================ --}}
 
                 <div class="mb-4">
                     <label class="form-label info-label">Add Log Note <span class="text-lowercase fw-normal">(Opsional)</span></label>
@@ -271,40 +272,43 @@ select option {
     const waBtnWrapper  = document.getElementById('waBtnWrapper');
     const waLink        = document.getElementById('waLink');
 
+    // FIX: Ambil current status dari PHP (bukan dari dropdown!)
+    // Ini yang jadi patokan apakah status sekarang memang "quotation request"
+    const currentStatus = "{{ strtolower($service->status ?? '') }}";
+
     // Data dari Laravel (PHP → JS)
     const rawPhone      = "{{ preg_replace('/[^0-9]/', '', $service->phone_number ?? '') }}";
     const customerName  = "{{ addslashes($service->customer_name ?? '') }}";
     const cofId         = "{{ $service->cof_id ?? '' }}";
-    // const brand         = "{{ addslashes($service->brand ?? '') }}";
     const serialNumber  = "{{ addslashes($service->serial_number ?? '') }}";
-    const productNumber = "{{ addslashes($service->product_number ?? '') }}";    
+    const productNumber = "{{ addslashes($service->product_number ?? '') }}";
     const namaType      = "{{ addslashes($service->nama_type ?? '') }}";
 
     function buildWaUrl() {
         // Normalise nomor: 08xx → 628xx
         const number = rawPhone.startsWith('0') ? '62' + rawPhone.slice(1) : rawPhone;
 
-const pesan =
-    `Halo ${customerName} 👋\n\n` +
-    `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak telah dicek dan ditemukan part yang rusak sehingga perlu penggantian sparepart baru. Berikut detail unit kakak:\n\n` +
-    `📱 *Unit* : ${namaType}\n` +
-    `🔖 *COF ID* : ${cofId}\n` +
-    `🔢 *S/N* : ${serialNumber}\n\n` +
-    `🔢 *P/N* : ${productNumber}\n\n` +
-
-    `🔧 Status saat ini: *Quotation Request*\n\n` +
-
-    `Detail sparepart yang perlu diganti:\n` +
-    `• *Part Number* : ${partNumber}\n` +
-    `• *Part Name* : ${partName}\n\n` +
-    `Mohon konfirmasi terkait pengajuan sparepart agar proses perbaikan dapat dilanjutkan.\n\n` +
-    `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
+        const pesan =
+            `Halo ${customerName} 👋\n\n` +
+            `Kami dari *KLA Service Center* ingin menginformasikan bahwa unit kakak telah dicek dan ditemukan part yang rusak sehingga perlu penggantian sparepart baru. Berikut detail unit kakak:\n\n` +
+            `📱 *Unit* : ${namaType}\n` +
+            `🔖 *COF ID* : ${cofId}\n` +
+            `🔢 *S/N* : ${serialNumber}\n` +
+            `🔢 *P/N* : ${productNumber}\n\n` +
+            `🔧 *Status saat ini* : Quotation Request\n\n` +
+            `Mohon konfirmasi terkait pengajuan sparepart agar proses perbaikan dapat dilanjutkan.\n\n` +
+            `Terima kasih telah mempercayakan unit kakak kepada kami 🙏`;
 
         return `https://wa.me/${number}?text=${encodeURIComponent(pesan)}`;
     }
 
     function toggleWaBtn() {
-        if (statusSelect.value === 'quotation approved') {
+        // FIX UTAMA: tombol WA hanya muncul jika:
+        // 1. current status (dari DB) = 'quotation request', DAN
+        // 2. dropdown yang dipilih juga = 'quotation request'
+        const dropdownVal = statusSelect.value.toLowerCase();
+
+        if (currentStatus === 'quotation request' && dropdownVal === 'quotation request') {
             waLink.href = buildWaUrl();
             waBtnWrapper.style.display = 'block';
         } else {
