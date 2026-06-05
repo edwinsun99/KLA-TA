@@ -22,9 +22,9 @@ class ErfController extends Controller
         return redirect()->route('login')->with('error', 'User tidak ditemukan.');
     }
 
-    // Ambil case milik branch yang sama + status untuk engineer
-    $cases = Service::where('branch_id', $user->branch_id)
-                    ->where('status', 'close repair') // <--- WAJIB supaya case hilang setelah di-upload
+      $cases = Service::where('branch_id', $user->branch_id)
+                    ->whereIn('status', ['finish repair', 'cancel repair'])
+                    ->whereNull('erf_file') // <--- WAJIB supaya case hilang setelah di-upload
                     ->orderBy('created_at', 'DESC')
                     ->get();
 

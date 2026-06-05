@@ -178,16 +178,21 @@
                     </div>
                     <div class="col-md-8">
                         <label class="form-label info-label">Change Status to *</label>
-                        <select name="status" id="statusSelect" class="form-select shadow-sm" required>
-                            @php
-                                $opsi = ['repair progress', 'quotation request', 'cancel repair', 'finish repair', 'close repair'];
-                            @endphp
-                            @foreach ($opsi as $st)
-                                <option value="{{ $st }}" {{ $service->status == $st ? 'selected' : '' }}>
-                                    {{ ucwords($st) }}
-                                </option>
-                            @endforeach
-                        </select>
+                       <select name="status" id="statusSelect" class="form-select shadow-sm" required>
+    @php
+        // Filter opsi berdasarkan current status
+        if ($service->status === 'quotation cancelled') {
+            $opsi = ['cancel repair'];
+        } else {
+            $opsi = ['repair progress', 'quotation request', 'cancel repair', 'finish repair', 'close repair'];
+        }
+    @endphp
+    @foreach ($opsi as $st)
+        <option value="{{ $st }}" {{ $service->status == $st ? 'selected' : '' }}>
+            {{ ucwords($st) }}
+        </option>
+    @endforeach
+</select>
                     </div>
                 </div>
 
@@ -284,7 +289,22 @@
 
         let pesan = '';
 
-        if (dropdownVal === 'finish repair') {
+        if (dropdownVal === 'cancel repair') {
+            // Template: customer nolak quotation, case dicancel, unit siap diambil
+            pesan =
+                `Halo ${customerName} 👋\n\n` +
+                `Kami dari *KLA Service Center* ingin menyampaikan informasi terkait unit kakak yang sebelumnya memerlukan penggantian sparepart.\n\n` +
+                `Sehubungan dengan keputusan kakak untuk tidak melanjutkan proses penggantian sparepart, dengan hormat kami sampaikan bahwa *proses perbaikan unit kakak telah kami batalkan*.\n\n` +
+                `Berikut detail unit kakak:\n\n` +
+                `📱 *Unit* : ${namaType}\n` +
+                `🔖 *COF ID* : ${cofId}\n` +
+                `🔢 *S/N* : ${serialNumber}\n` +
+                `🔢 *P/N* : ${productNumber}\n\n` +
+                `❌ *Status saat ini: Cancel Repair*\n\n` +
+                `Unit kakak kini dapat diambil kembali di service center kami. Silakan datang pada jam operasional kami.\n\n` +
+                `Kami mohon maaf apabila unit kakak belum dapat kami perbaiki. Terima kasih atas kepercayaan kakak kepada *KLA Service Center* 🙏`;
+
+        } else if (dropdownVal === 'finish repair') {
             // Template: unit selesai diperbaiki, siap diambil
             pesan =
                 `Halo ${customerName} 👋\n\n` +
@@ -332,8 +352,8 @@
     function toggleWaBtn() {
         const dropdownVal = statusSelect.value.toLowerCase();
 
-        // Tombol WA muncul saat dropdown = "repair progress" atau "finish repair"
-        if (dropdownVal === 'repair progress' || dropdownVal === 'finish repair') {
+        // Tombol WA muncul saat dropdown = "repair progress", "finish repair", atau "cancel repair"
+        if (['repair progress', 'finish repair', 'cancel repair'].includes(dropdownVal)) {
             waLink.href = buildWaUrl(dropdownVal);
             waBtnWrapper.style.display = 'block';
         } else {
