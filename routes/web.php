@@ -132,7 +132,7 @@ Route::prefix('customer')->group(function () {
 });
 
 // ===========================
-// 🔹 LIVECHAT ROUTES
+// 🔹 CONSUL ASYNC ROUTES
 // ===========================
 
 // Customer - Live Chat
@@ -144,11 +144,12 @@ Route::middleware('auth')->group(function () {
 
 // CS - Live Chat
 Route::middleware('auth')->group(function () {
-    Route::get('/cs/chats', [CsController::class, 'index']);
+    Route::get('/cs/chats', [CsController::class, 'index'])->name('cs.consul.index'); // ← tambah ini
     Route::post('/cs/chat/{consultation}/join', [CsController::class, 'joinChat']);
     Route::post('/cs/chat/{consultation}/send', [CsController::class, 'sendMessage']);
     Route::post('/cs/chat/{consultation}/close', [CsController::class, 'closeChat']);
     Route::post('/cs/chat/{consultation}/escalate', [CsController::class, 'escalateToKla']);
+    Route::get('/cs/chat/{consultation}', [CsController::class, 'show'])->name('cs.consul.show');
 });
 
 // ===========================

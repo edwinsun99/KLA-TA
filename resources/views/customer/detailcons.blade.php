@@ -562,7 +562,7 @@
                         </div>
                         <h2 class="title">{{ $consultation->subject ?? 'Detail Konsultasi' }}</h2>
                         <p class="subtitle">
-                            Halaman ini menampilkan detail konsultasi di sisi kiri dan live chat di sisi kanan.
+                            Halaman ini menampilkan detail konsultasi di sisi kiri dan chat di sisi kanan.
                             Chat dimulai dengan AI, dan bisa dialihkan ke CS jika dibutuhkan.
                         </p>
                     </div>
@@ -631,7 +631,7 @@
                     </div>
                 </div>
 
-                {{-- KANAN: Live Chat --}}
+                {{-- KANAN: Chat --}}
                 <div class="right-stack">
                     <div class="chat-panel">
                         <div class="panel-title-row" style="margin-bottom: 0;">
@@ -701,63 +701,22 @@
     </div>
 </div>
 
-{{-- Pusher JS --}}
-<script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const CONSULTATION_ID = {{ $consultationId }};
-    const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]').content;
+    const CSRF_TOKEN      = document.querySelector('meta[name="csrf-token"]').content;
 
-    const input        = document.getElementById('chat-input');
-    const sendBtn      = document.getElementById('chat-send-btn');
-    const redirectBtn  = document.getElementById('chat-redirect-btn');
-    const messagesEl   = document.getElementById('chat-messages');
-    const statusBadge  = document.getElementById('chat-status-badge');
-    const roleNote     = document.getElementById('chat-role-note');
-    const typingEl     = document.getElementById('typing-indicator');
-    const statusChip   = document.getElementById('status-chip');
-    const stageText    = document.getElementById('stage-text');
+    const input       = document.getElementById('chat-input');
+    const sendBtn     = document.getElementById('chat-send-btn');
+    const redirectBtn = document.getElementById('chat-redirect-btn');
+    const messagesEl  = document.getElementById('chat-messages');
+    const statusBadge = document.getElementById('chat-status-badge');
+    const roleNote    = document.getElementById('chat-role-note');
+    const typingEl    = document.getElementById('typing-indicator');
 
-    let isSending = false;
-
-    // ─── Pusher Setup ───────────────────────────────────────────────
-    const pusher  = new Pusher('{{ env("VITE_PUSHER_APP_KEY") }}', {
-        cluster: '{{ env("VITE_PUSHER_APP_CLUSTER") }}'
-    });
-
-    const channel = pusher.subscribe('consultations.' + CONSULTATION_ID);
-
-    channel.bind('App\\Events\\MessageSent', function (data) {
-        typingEl.classList.remove('show');
-        appendMessage(data.sender_type, data.body);
-
-        // Tampilkan tombol redirect kalau AI tanya mau ke CS
-        if (data.sender_type === 'ai' &&
-            data.body.toLowerCase().includes('customer service')) {
-            redirectBtn.style.display = 'inline-flex';
-        }
-
-        // Update badge kalau CS join
-        if (data.sender_type === 'cs') {
-            setStatus('cs_handling', 'CS Active', 'Customer Service');
-        }
-    });
-
-    // ─── Load History ────────────────────────────────────────────────
-    fetch(`/chat/${CONSULTATION_ID}/messages`)
-        .then(r => r.json())
-        .then(msgs => {
-            if (msgs.length === 0) {
-                // Pesan awal AI kalau belum ada history
-                appendMessage('ai', 'Halo kak, saya AI Assistant KLA Computer. Ceritakan masalah unit kakak ya, saya akan coba bantu.');
-            } else {
-                msgs.forEach(m => appendMessage(m.sender_type, m.body));
-            }
-        })
-        .catch(() => {
-            appendMessage('ai', 'Halo kak, saya AI Assistant KLA Computer. Ceritakan masalah unit kakak ya, saya akan coba bantu.');
-        });
+    let isSending      = false;
+    let lastMessageId  = 0;  // untuk polling — hanya ambil pesan baru
+    let pollingTimer   = null;
 
     // ─── Helpers ─────────────────────────────────────────────────────
     function escapeHtml(text) {
@@ -766,7 +725,10 @@ document.addEventListener('DOMContentLoaded', function () {
             .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
     }
 
-    function appendMessage(senderType, body) {
+    function appendMessage(senderType, body, id) {
+        // Hindari duplikat
+        if (id && document.querySelector(`[data-msg-id="${id}"]`)) return;
+
         const kindMap  = { customer: 'user', ai: 'bot', cs: 'bot' };
         const labelMap = { customer: 'KAMU', ai: 'AI', cs: 'CS' };
 
@@ -775,37 +737,59 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const box = document.createElement('div');
         box.className = `chat-message ${kind}`;
+        if (id) box.dataset.msgId = id;
         box.innerHTML = `
             <p class="mini-card-label">${label}</p>
             <p class="mini-card-value">${escapeHtml(body)}</p>
         `;
         messagesEl.appendChild(box);
         messagesEl.scrollTop = messagesEl.scrollHeight;
+
+        if (id && id > lastMessageId) lastMessageId = id;
     }
 
-    function setStatus(status, badgeText, roleText) {
-        statusBadge.textContent = badgeText;
-        roleNote.textContent    = roleText;
-
-        const styles = {
-            'open':             { border: 'rgba(34,197,94,0.18)',  bg: 'rgba(34,197,94,0.08)',  color: '#166534' },
-            'ai':               { border: 'rgba(124,58,237,0.16)', bg: 'rgba(124,58,237,0.08)', color: '#5b21b6' },
-            'redirect_to_cs':   { border: 'rgba(14,165,233,0.18)', bg: 'rgba(14,165,233,0.08)', color: '#075985' },
-            'cs_handling':      { border: 'rgba(14,165,233,0.18)', bg: 'rgba(14,165,233,0.08)', color: '#075985' },
-            'closed':           { border: 'rgba(124,58,237,0.18)', bg: 'rgba(124,58,237,0.09)', color: '#5b21b6' },
-            'escalated_to_kla': { border: 'rgba(245,158,11,0.22)', bg: 'rgba(245,158,11,0.09)', color: '#9a3412' },
-        };
-
-        const s = styles[status] ?? styles['ai'];
-        statusBadge.style.borderColor = s.border;
-        statusBadge.style.background  = s.bg;
-        statusBadge.style.color       = s.color;
+    function setStatus(badgeText, roleText, borderColor, bgColor, color) {
+        statusBadge.textContent      = badgeText;
+        roleNote.textContent         = roleText;
+        statusBadge.style.borderColor = borderColor;
+        statusBadge.style.background  = bgColor;
+        statusBadge.style.color       = color;
     }
 
-    function lockChat() {
-        input.disabled    = true;
-        sendBtn.disabled  = true;
-        redirectBtn.style.display = 'none';
+    // ─── Load History Awal ───────────────────────────────────────────
+    fetch(`/chat/${CONSULTATION_ID}/messages`)
+        .then(r => r.json())
+        .then(msgs => {
+            if (msgs.length === 0) {
+                appendMessage('ai', 'Halo kak, saya AI Assistant KLA Computer. Ceritakan masalah unit kakak ya, saya akan coba bantu.');
+            } else {
+                msgs.forEach(m => appendMessage(m.sender_type, m.body, m.id));
+            }
+            startPolling();
+        })
+        .catch(() => {
+            appendMessage('ai', 'Halo kak, saya AI Assistant KLA Computer. Ceritakan masalah unit kakak ya, saya akan coba bantu.');
+            startPolling();
+        });
+
+    // ─── Polling tiap 3 detik (untuk balasan CS) ─────────────────────
+    function startPolling() {
+        pollingTimer = setInterval(async () => {
+            try {
+                const r    = await fetch(`/chat/${CONSULTATION_ID}/messages`);
+                const msgs = await r.json();
+                msgs.forEach(m => {
+                    if (m.id > lastMessageId) {
+                        appendMessage(m.sender_type, m.body, m.id);
+                        // Update badge kalau CS balas
+                        if (m.sender_type === 'cs') {
+                            setStatus('CS Active', 'Customer Service',
+                                'rgba(14,165,233,0.18)', 'rgba(14,165,233,0.08)', '#075985');
+                        }
+                    }
+                });
+            } catch (e) { /* silent */ }
+        }, 3000);
     }
 
     // ─── Kirim Pesan ─────────────────────────────────────────────────
@@ -813,18 +797,18 @@ document.addEventListener('DOMContentLoaded', function () {
         const text = input.value.trim();
         if (!text || isSending) return;
 
-        isSending = true;
+        isSending        = true;
         sendBtn.disabled = true;
+        input.value      = '';
 
         appendMessage('customer', text);
-        input.value = '';
 
         // Tampilkan typing indicator
         typingEl.classList.add('show');
         messagesEl.scrollTop = messagesEl.scrollHeight;
 
         try {
-            await fetch(`/chat/${CONSULTATION_ID}/send`, {
+            const res  = await fetch(`/chat/${CONSULTATION_ID}/send`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -832,11 +816,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 },
                 body: JSON.stringify({ body: text }),
             });
+
+            const data = await res.json();
+
+            typingEl.classList.remove('show');
+
+            // Langsung tampilkan AI reply dari response (tanpa Pusher)
+            if (data.ai_message) {
+                appendMessage('ai', data.ai_message.body, data.ai_message.id);
+
+                // Tampilkan tombol redirect kalau AI sebut customer service
+                if (data.ai_message.body.toLowerCase().includes('customer service')) {
+                    redirectBtn.style.display = 'inline-flex';
+                }
+            }
+
         } catch (e) {
             typingEl.classList.remove('show');
             appendMessage('ai', 'Maaf, terjadi kesalahan. Silakan coba lagi.');
         } finally {
-            isSending    = false;
+            isSending        = false;
             sendBtn.disabled = false;
             input.focus();
         }
@@ -845,16 +844,21 @@ document.addEventListener('DOMContentLoaded', function () {
     // ─── Alihkan ke CS ───────────────────────────────────────────────
     redirectBtn.addEventListener('click', async function () {
         redirectBtn.style.display = 'none';
-        setStatus('redirect_to_cs', 'Redirect to CS', 'Menunggu CS...');
+        setStatus('Redirect to CS', 'Menunggu CS...',
+            'rgba(14,165,233,0.18)', 'rgba(14,165,233,0.08)', '#075985');
 
         try {
-            await fetch(`/chat/${CONSULTATION_ID}/request-cs`, {
+            const res  = await fetch(`/chat/${CONSULTATION_ID}/request-cs`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': CSRF_TOKEN,
                 },
             });
+            const data = await res.json();
+            if (data.message) {
+                appendMessage('ai', data.message.body, data.message.id);
+            }
         } catch (e) {
             appendMessage('ai', 'Maaf, gagal mengalihkan ke CS. Silakan coba lagi.');
         }
@@ -868,6 +872,9 @@ document.addEventListener('DOMContentLoaded', function () {
             sendMessage();
         }
     });
+
+    // Stop polling kalau user tinggalkan halaman
+    window.addEventListener('beforeunload', () => clearInterval(pollingTimer));
 
     input.focus();
 });

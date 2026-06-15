@@ -3,18 +3,28 @@
 namespace App\Http\Controllers\livechat;
 
 use App\Http\Controllers\Controller;
-use App\Events\MessageSent;
 use App\Models\Consultations;
 use App\Models\Message;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CsController extends Controller
 {
-    // CS join conversation
-    public function joinChat(Consultation $consultation)
+
+// Taruh di atas class atau bikin helper
+private function checkCs() {
+    if (Session::get('role') !== 'CS') {
+        abort(403, 'Akses ditolak.');
+    }
+}    
+
+// CS join conversation
+    public function joinChat(Consultations $consultation)
     {
+            $this->checkCs(); // ← di sini
+
         $consultation->update([
-            'cs_id'  => auth()->id(),
+            'cs_id'  => Session::get('user_id') ?? auth()->id(),
             'status' => 'cs_handling',
         ]);
 
@@ -22,17 +32,17 @@ class CsController extends Controller
             'consultation_id' => $consultation->id,
             'user_id'         => auth()->id(),
             'sender_type'     => 'cs',
-            'body'            => 'Halo kak, saya ' . auth()->user()->name . ' dari tim Customer Service KLA Computer. Ada yang bisa saya bantu?',
+            'body'            => 'Halo kak, saya dari tim Customer Service KLA Computer. Ada yang bisa saya bantu?',
         ]);
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        return response()->json(['status' => 'cs_handling']);
+        return response()->json(['status' => 'cs_handling', 'message' => $message]);
     }
 
     // CS kirim pesan
-    public function sendMessage(Request $request, Consultation $consultation)
+    public function sendMessage(Request $request, Consultations $consultation)
     {
+                    $this->checkCs(); // ← di sini
+
         $request->validate(['body' => 'required|string']);
 
         $message = Message::create([
@@ -42,14 +52,14 @@ class CsController extends Controller
             'body'            => $request->body,
         ]);
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        return response()->json(['status' => 'sent']);
+        return response()->json(['status' => 'sent', 'message' => $message]);
     }
 
-    // CS close konsultasi (solved)
-    public function closeChat(Consultation $consultation)
+    // CS close konsultasi
+    public function closeChat(Consultations $consultation)
     {
+                $this->checkCs(); // ← di sini
+
         $consultation->update(['status' => 'closed']);
 
         $message = Message::create([
@@ -59,40 +69,50 @@ class CsController extends Controller
             'body'            => 'Konsultasi telah selesai. Terima kasih telah menghubungi KLA Computer!',
         ]);
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        return response()->json(['status' => 'closed']);
+        return response()->json(['status' => 'closed', 'message' => $message]);
     }
 
     // CS eskalasi ke KLA
     public function escalateToKla(Request $request, Consultations $consultation)
     {
+                $this->checkCs(); // ← di sini
+
         $request->validate(['notes' => 'required|string']);
 
         $consultation->update([
-            'status'    => 'escalated_to_kla',
-            'notes' => $request->notes,
+            'status' => 'escalated_to_kla',
+            'notes'  => $request->notes,
         ]);
 
         $message = Message::create([
             'consultation_id' => $consultation->id,
             'user_id'         => auth()->id(),
             'sender_type'     => 'cs',
-            'body'            => 'Unit kakak perlu dibawa ke service center kami (KLA). Silakan kunjungi KLA Computer dengan membawa unit kakak. ' . $request->kla_notes,
+            'body'            => 'Unit kakak perlu dibawa ke service center kami (KLA). Silakan kunjungi KLA Computer dengan membawa unit kakak. ' . $request->notes,
         ]);
 
-        broadcast(new MessageSent($message))->toOthers();
-
-        return response()->json(['status' => 'escalated_to_kla']);
+        return response()->json(['status' => 'escalated_to_kla', 'message' => $message]);
     }
 
-    // List semua konsultasi yang perlu di-handle CS
+    // List konsultasi masuk ke CS
     public function index()
     {
-        $consultations = Consultation::whereIn('status', ['redirect_to_cs', 'cs_handling'])
-            ->with(['messages' => fn($q) => $q->latest()->limit(1)])
+                    $this->checkCs(); // ← di sini
+
+        $consultations = Consultations::whereIn('status', ['redirect_to_cs', 'cs_handling'])
+            ->with(['customer', 'messages' => fn($q) => $q->latest()->limit(1)])
+            ->latest()
             ->get();
 
-        return response()->json($consultations);
+        return view('livechat.index', compact('consultations'));
+    }
+
+    // Detail konsultasi + chat
+    public function show(Consultations $consultation)
+    {
+                    $this->checkCs(); // ← di sini
+
+        $messages = $consultation->messages()->orderBy('created_at')->get();
+        return view('livechat.show', compact('consultation', 'messages'));
     }
 }

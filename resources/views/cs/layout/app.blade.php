@@ -206,6 +206,10 @@
             <i class="bi bi-house-door"></i> <span>Home</span>
         </a>
 
+        <a href="{{ route('cs.consul.index') }}" class="menu-item {{ request()->routeIs('cs.consul.*') ? 'active' : '' }}">
+    <i class="bi bi-chat-dots"></i> <span>Konsultasi</span>
+</a>
+
         <div class="accordion accordion-flush" id="sidebarAccordion">
             <div class="accordion-item border-0 bg-transparent">
                 @php $caseActive = request()->routeIs('cs.services.*') || request()->routeIs('cases.*') || request()->routeIs('cs.finish.*'); @endphp
