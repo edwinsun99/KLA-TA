@@ -149,7 +149,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/cs/chat/{consultation}/send', [CsController::class, 'sendMessage']);
     Route::post('/cs/chat/{consultation}/close', [CsController::class, 'closeChat']);
     Route::post('/cs/chat/{consultation}/escalate', [CsController::class, 'escalateToKla']);
-    Route::get('/cs/chat/{consultation}', [CsController::class, 'show'])->name('cs.consul.show');
+    // Route::get('/cs/chat/{consultation}', [CsController::class, 'show'])->name('cs.consul.show');
 });
 
 // ===========================

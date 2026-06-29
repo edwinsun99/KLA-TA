@@ -21,6 +21,8 @@ class Consultations extends Model
         // 'serial_number',
         'description',
         'status',
+        'notes', 
+        'cs_id'
     ];
 
     public function customer()
