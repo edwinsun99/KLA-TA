@@ -1,3 +1,6 @@
+{{-- Konsultasi Masuk CS include live chat --}}
+{{-- menu Konsultasi di CS --}}
+
 @extends('cs.layout.app')
 
 @section('title', 'Konsultasi Masuk')
@@ -460,17 +463,17 @@
                             {{ optional($consul->updated_at)->diffForHumans() }}
                         </span>
 
-                        @if($isWaiting)
-                            <button class="btn-ambil"
-                                onclick="openModal({{ $consul->id }}, @json($consul->subject ?? 'Konsultasi'), @json($consul->customer?->name ?? $consul->customer?->username ?? 'Customer'), true)">
-                                <i class="bi bi-hand-index me-1"></i> Ambil
-                            </button>
-                        @else
-                            <button class="btn-lanjut"
-                                onclick="openModal({{ $consul->id }}, @json($consul->subject ?? 'Konsultasi'), @json($consul->customer?->name ?? $consul->customer?->username ?? 'Customer'), false)">
-                                <i class="bi bi-arrow-right me-1"></i> Lanjutkan
-                            </button>
-                        @endif
+                       @if($isWaiting)
+    <button class="btn-ambil"
+        onclick="openModal({{ $consul->id }}, `{{ addslashes($consul->subject ?? 'Konsultasi') }}`, `{{ addslashes($consul->customer?->name ?? $consul->customer?->username ?? 'Customer') }}`, true)">
+        <i class="bi bi-hand-index me-1"></i> Ambil
+    </button>
+@else
+    <button class="btn-lanjut"
+        onclick="openModal({{ $consul->id }}, `{{ addslashes($consul->subject ?? 'Konsultasi') }}`, `{{ addslashes($consul->customer?->name ?? $consul->customer?->username ?? 'Customer') }}`, false)">
+        <i class="bi bi-arrow-right me-1"></i> Lanjutkan
+    </button>
+@endif
                     </div>
                 </div>
             @endforeach
@@ -528,8 +531,8 @@
 <script src="https://js.pusher.com/8.4.0/pusher.min.js"></script>
 <script>
 const CSRF   = document.querySelector('meta[name="csrf-token"]').content;
-const pusher = new Pusher('{{ env("VITE_PUSHER_APP_KEY") }}', {
-    cluster: '{{ env("VITE_PUSHER_APP_CLUSTER") }}'
+const pusher = new Pusher('{{ env("PUSHER_APP_KEY") }}', {
+    cluster: '{{ env("PUSHER_APP_CLUSTER") }}'
 });
 
 let currentId     = null;
